@@ -99,6 +99,38 @@ El JSON NDEF almacenado en cada tarjeta usa este formato:
 tarjeta: puede cambiarse un chip sin modificar la lógica, escribiendo los mismos
 datos NDEF en el reemplazo.
 
+## Pedir una tarjeta desde el gameplay
+
+El receptor NFC queda activo permanentemente en segundo plano. Una lectura no
+modifica el juego por sí sola: el gameplay debe pedir explícitamente el objeto
+que espera mediante `GameController.request_nfc(valor)`.
+
+```gdscript
+# Las tres llamadas son equivalentes con el catálogo actual.
+game.request_nfc("wood")
+game.request_nfc("Madera")
+game.request_nfc("CARD_001")
+```
+
+La función busca `tipo`, `nombre` o `ID` en el catálogo y devuelve `true` si
+existe. Solo la tarjeta solicitada completa la espera. Las lecturas ocurridas
+sin una solicitud activa se ignoran; las tarjetas equivocadas no avanzan el
+juego. Al aceptar una lectura se emite `nfc_request_completed(card, reader_id)`.
+
+## Escena aislada de prueba NFC
+
+Abrí y ejecutá `scenes/nfc_test.tscn` para comprobar la arquitectura sin tocar
+la escena principal. La escena contiene dos capas:
+
+- `NfcBackground`: inicia el servidor HTTP, escucha constantemente y muestra
+  por `print()` cada UID o JSON NDEF que recibe en el panel **Output**.
+- `GameplayLayer`: contiene un jugador azul y un bloque dorado. Al entrar en
+  el `Area2D` del bloque, el gameplay llama `request_item("wood")`.
+
+Mové el jugador con las flechas. Una vez activada la zona, escaneá Madera con
+la app Android o presioná `1` para simularla. Una tarjeta leída antes de entrar
+en el área queda solo registrada en Output y no modifica el gameplay.
+
 ## Estructura
 
 ```text

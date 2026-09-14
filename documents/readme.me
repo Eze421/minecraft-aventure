@@ -654,6 +654,29 @@ dependen de la IP de la PC ni deben reescribirse al cambiar de red.
 La instalación, los datos de ejemplo y el uso están documentados en
 [`android_nfc_bridge/README.md`](../android_nfc_bridge/README.md).
 
+### Solicitudes NFC desde el juego
+
+El receptor HTTP permanece activo en segundo plano desde que inicia la escena.
+Para que una lectura afecte el gameplay, se debe solicitar primero una tarjeta:
+
+```gdscript
+game.request_nfc("wood")
+```
+
+El valor puede ser el tipo (`wood`), nombre (`Madera`) o ID (`CARD_001`). La
+función busca el objeto en el catálogo y solo acepta esa tarjeta. Las lecturas
+que llegan sin una solicitud activa se ignoran; una lectura correcta emite
+`nfc_request_completed(card, reader_id)`.
+
+### Escena aislada de prueba NFC
+
+`scenes/nfc_test.tscn` permite validar la separación de capas sin modificar la
+escena principal. `NfcBackground` inicia el receptor HTTP y escribe por
+`print()` cada UID o JSON NDEF recibido en Output. `GameplayLayer` contiene un
+jugador azul y un bloque dorado: al entrar en su `Area2D`, solicita Madera con
+`request_item("wood")`. La lectura solo llega al gameplay después de esa
+solicitud; antes de ella queda registrada únicamente como diagnóstico.
+
 ### Catálogo actual de tarjetas
 
 Este es el catálogo canónico, compartido por `data/cards.json`, la app Android
