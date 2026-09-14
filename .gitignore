@@ -1,0 +1,11 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Android Studio / Gradle
+android_nfc_bridge/.gradle/
+android_nfc_bridge/local.properties
+android_nfc_bridge/app/build/
+android_nfc_bridge/build/
+android_nfc_bridge/.idea/
+*.apk

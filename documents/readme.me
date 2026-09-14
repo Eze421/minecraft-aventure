@@ -1,0 +1,961 @@
+# Guía técnica del proyecto
+
+## Sistema NFC + Arduino + Godot
+
+### 1. Objetivo del proyecto
+
+El proyecto consiste en desarrollar una experiencia interactiva corta para una exposición con temática inspirada en Minecraft.
+
+El apartado artístico, creativo, narrativo, diseño de la aventura, puzzles, decoración y materiales físicos queda fuera de este documento.
+
+El objetivo de este documento es definir y organizar exclusivamente el **apartado técnico** necesario para integrar:
+
+* Godot como aplicación principal.
+* Tarjetas NFC como elementos de interacción.
+* Lectores NFC.
+* Arduino como controlador de los lectores.
+* Comunicación entre Arduino y Godot.
+* Sistema de identificación de tarjetas.
+* Sistema de eventos NFC.
+* Integración de múltiples lectores.
+* Manejo de errores y desconexiones.
+* Pruebas y validación del sistema.
+
+La experiencia final debe ser corta y estar preparada para funcionar repetidamente durante una exposición.
+
+---
+
+# 2. Arquitectura general
+
+La arquitectura prevista será:
+
+```text
+┌──────────────────────┐
+│      TARJETA NFC     │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│      LECTOR NFC      │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│        ARDUINO       │
+│                      │
+│ - Lee tarjeta        │
+│ - Obtiene UID        │
+│ - Identifica lector  │
+│ - Envía evento       │
+└──────────┬───────────┘
+           │
+           │ USB / Serial
+           ▼
+┌──────────────────────┐
+│        GODOT         │
+│                      │
+│ - Recibe eventos     │
+│ - Identifica tarjeta │
+│ - Ejecuta lógica     │
+│ - Controla estado    │
+└──────────────────────┘
+```
+
+La idea principal es que **Arduino no conozca la lógica del juego**.
+
+Arduino solamente debe encargarse de detectar las tarjetas y comunicar los datos.
+
+Godot será responsable de interpretar esos datos y decidir qué ocurre dentro de la experiencia.
+
+---
+
+# 3. Separación por capas
+
+El sistema se dividirá en tres capas principales.
+
+## 3.1. Hardware
+
+Incluye:
+
+* Arduino.
+* Lectores NFC.
+* Tarjetas NFC.
+* Cableado.
+* Alimentación.
+
+Responsabilidad:
+
+> Detectar físicamente una tarjeta NFC y obtener su identificación.
+
+---
+
+## 3.2. Comunicación
+
+Esta capa comunica Arduino con Godot.
+
+La comunicación inicialmente se realizará mediante USB y puerto serie.
+
+Conceptualmente:
+
+```text
+Arduino
+   │
+   │ Serial
+   ▼
+Godot
+```
+
+Arduino enviará mensajes estructurados.
+
+Ejemplo conceptual:
+
+```text
+READER=1;UID=04A1B2C3D4
+```
+
+Godot interpretará el mensaje y lo convertirá en un evento.
+
+Por ejemplo:
+
+```text
+lector = 1
+UID = 04A1B2C3D4
+```
+
+---
+
+## 3.3. Aplicación
+
+Godot será responsable de:
+
+* Recibir eventos NFC.
+* Identificar tarjetas.
+* Mantener el estado de la experiencia.
+* Ejecutar las acciones correspondientes.
+* Controlar los puzzles.
+* Mostrar información.
+* Detectar combinaciones.
+* Gestionar errores.
+* Reiniciar la experiencia.
+
+La lógica del juego no debe depender directamente de la implementación del hardware.
+
+---
+
+# 4. Principio fundamental de diseño
+
+Godot no debería necesitar saber si una tarjeta fue detectada por:
+
+* Arduino.
+* Un teléfono.
+* Otro dispositivo.
+* Un lector diferente.
+
+Todos los dispositivos deberían terminar produciendo un evento común.
+
+Por ejemplo:
+
+```text
+NFC_READER_1 → CARD_001
+```
+
+Godot recibe:
+
+```text
+card_detected(reader_id, card_id)
+```
+
+A partir de ahí, el resto del sistema funciona independientemente del hardware utilizado.
+
+Esto permitirá comenzar el desarrollo **antes de tener toda la electrónica física**.
+
+---
+
+# 5. Desarrollo por etapas
+
+El desarrollo se dividirá en fases.
+
+## FASE 1 — Preparación de Godot
+
+Objetivo:
+
+Crear el proyecto base y preparar la arquitectura del software.
+
+Tareas:
+
+* Crear proyecto Godot.
+* Crear estructura de carpetas.
+* Crear escena principal.
+* Crear sistema básico de estados.
+* Crear sistema de eventos.
+* Preparar sistema de identificación de tarjetas.
+
+Resultado esperado:
+
+Godot puede ejecutar una experiencia básica y recibir eventos simulados.
+
+---
+
+# 6. FASE 2 — Prototipo NFC
+
+Antes de conectar Arduino se deberá probar el concepto NFC.
+
+Objetivo:
+
+Comprobar que una tarjeta puede ser detectada y que su identificación puede utilizarse dentro del software.
+
+El objetivo técnico será conseguir:
+
+```text
+Tarjeta NFC
+     ↓
+Detección
+     ↓
+UID
+     ↓
+Identificación
+     ↓
+Evento
+     ↓
+Godot
+```
+
+En esta etapa no es necesario tener todavía la mesa ni la electrónica definitiva.
+
+---
+
+# 7. FASE 3 — Sistema de tarjetas
+
+Godot deberá tener una forma de relacionar un UID con un objeto.
+
+Ejemplo conceptual:
+
+```text
+UID: 04A1B2C3D4
+        ↓
+CARD_001
+        ↓
+MADERA
+```
+
+Otro ejemplo:
+
+```text
+UID: 049F72AB31
+        ↓
+CARD_002
+        ↓
+PIEDRA
+```
+
+La aplicación debería trabajar principalmente con un identificador interno:
+
+```text
+CARD_001
+CARD_002
+CARD_003
+```
+
+y no depender directamente del UID físico.
+
+Esto permitirá cambiar o reasignar tarjetas sin modificar toda la lógica del juego.
+
+---
+
+# 8. FASE 4 — Arduino + lector NFC
+
+Cuando se disponga de la electrónica:
+
+```text
+┌──────────────┐
+│    ARDUINO   │
+└──────┬───────┘
+       │
+       ├──── LECTOR NFC 1
+       ├──── LECTOR NFC 2
+       └──── LECTOR NFC 3
+```
+
+El Arduino deberá:
+
+1. Inicializar los lectores.
+2. Detectar tarjetas.
+3. Leer el UID.
+4. Determinar qué lector detectó la tarjeta.
+5. Enviar el evento por puerto serie.
+
+Ejemplo:
+
+```text
+READER=1;UID=04A1B2C3D4
+```
+
+---
+
+# 9. Sistema de múltiples lectores
+
+El sistema debe diseñarse desde el principio para soportar más de un lector.
+
+Esto es importante porque puede ser necesario determinar **dónde** se colocó una tarjeta.
+
+Ejemplo:
+
+```text
+                 ARDUINO
+                    │
+       ┌────────────┼────────────┐
+       ▼            ▼            ▼
+    LECTOR 1     LECTOR 2     LECTOR 3
+       │            │            │
+       └────────────┼────────────┘
+                    ▼
+                  GODOT
+```
+
+Godot debería poder recibir:
+
+```text
+Lector 1 → CARD_001
+Lector 2 → CARD_002
+Lector 3 → CARD_003
+```
+
+Esto permitirá utilizar diferentes posiciones físicas como parte de la interacción.
+
+---
+
+# 10. Protocolo de comunicación
+
+Se deberá definir un protocolo sencillo y estable entre Arduino y Godot.
+
+Formato inicial propuesto:
+
+```text
+READER=1;UID=04A1B2C3D4
+```
+
+También podrán existir eventos como:
+
+```text
+READER=2;UID=049F72AB31
+```
+
+o mensajes de estado:
+
+```text
+READY
+```
+
+```text
+ERROR
+```
+
+```text
+READER_CONNECTED
+```
+
+El protocolo definitivo se decidirá cuando se pruebe la electrónica real.
+
+La prioridad será que sea:
+
+* Fácil de leer.
+* Fácil de depurar.
+* Fácil de enviar desde Arduino.
+* Fácil de interpretar desde Godot.
+* Resistente a mensajes incompletos.
+
+---
+
+# 11. Sistema de eventos en Godot
+
+Godot debería convertir los mensajes recibidos en eventos internos.
+
+Ejemplo:
+
+```text
+Arduino
+   ↓
+"READER=1;UID=04A1B2C3D4"
+   ↓
+Parser
+   ↓
+reader_id = 1
+uid = 04A1B2C3D4
+   ↓
+CardDatabase
+   ↓
+CARD_001
+   ↓
+Evento:
+card_detected(1, CARD_001)
+```
+
+El resto del juego solamente debería trabajar con:
+
+```text
+card_detected(reader_id, card_id)
+```
+
+y no con mensajes seriales directamente.
+
+---
+
+# 12. Base de datos de tarjetas
+
+Se deberá crear un sistema que permita registrar las tarjetas.
+
+Ejemplo:
+
+```text
+CARD_001
+Nombre: Madera
+UID: 04A1B2C3D4
+
+CARD_002
+Nombre: Piedra
+UID: 049F72AB31
+
+CARD_003
+Nombre: Hierro
+UID: 0478129ABC
+```
+
+Idealmente, los datos de las tarjetas deberían estar separados del código principal.
+
+Esto permitirá modificar:
+
+* UID.
+* Nombre.
+* Tipo.
+* Propiedades.
+
+sin modificar la lógica principal.
+
+---
+
+# 13. Sistema de estados
+
+La aplicación deberá tener estados claramente definidos.
+
+Ejemplo:
+
+```text
+INICIO
+   ↓
+ESPERANDO
+   ↓
+INTERACCIÓN
+   ↓
+PUZZLE
+   ↓
+SIGUIENTE ESTADO
+   ↓
+FINAL
+   ↓
+REINICIO
+```
+
+La implementación exacta dependerá de la aventura diseñada, pero técnicamente deberá existir una máquina de estados o sistema equivalente.
+
+Esto permitirá controlar qué eventos NFC son válidos en cada momento.
+
+---
+
+# 14. Validación de eventos
+
+No todas las tarjetas deberían producir una acción en cualquier momento.
+
+Por ejemplo:
+
+```text
+Estado actual:
+PUZZLE_1
+
+Tarjeta detectada:
+CARD_003
+```
+
+Godot deberá comprobar:
+
+```text
+¿CARD_003 es válida en PUZZLE_1?
+```
+
+Si no lo es:
+
+```text
+Ignorar
+```
+
+Si lo es:
+
+```text
+Ejecutar acción
+```
+
+Esto evita que una tarjeta detectada accidentalmente altere el progreso.
+
+---
+
+# 15. Detección repetida
+
+Los lectores NFC pueden detectar repetidamente una tarjeta mientras permanezca colocada encima.
+
+Por lo tanto, será necesario implementar algún sistema de control.
+
+Ejemplo:
+
+```text
+Tarjeta detectada
+      ↓
+Evento ejecutado
+      ↓
+Bloquear repetición
+      ↓
+Esperar retirada
+      ↓
+Permitir nueva detección
+```
+
+Esto deberá probarse con el hardware real.
+
+---
+
+# 16. Manejo de errores
+
+El sistema deberá contemplar situaciones como:
+
+* Arduino desconectado.
+* Lector NFC desconectado.
+* Tarjeta desconocida.
+* UID inválido.
+* Mensaje serial incompleto.
+* Mensaje duplicado.
+* Lectura repetida.
+* Pérdida de comunicación.
+* Reinicio de Arduino.
+* Reinicio de Godot.
+
+La experiencia no debería quedar bloqueada permanentemente por una lectura incorrecta.
+
+---
+
+# 17. Reconexión
+
+Godot debería poder detectar si Arduino dejó de responder.
+
+Conceptualmente:
+
+```text
+ARDUINO CONECTADO
+       ↓
+COMUNICACIÓN NORMAL
+       ↓
+ARDUINO DESCONECTADO
+       ↓
+MOSTRAR ERROR / ESTADO
+       ↓
+ESPERAR RECONEXIÓN
+       ↓
+ARDUINO CONECTADO
+       ↓
+CONTINUAR
+```
+
+Esto será especialmente importante durante una exposición.
+
+---
+
+# 18. Sistema de simulación
+
+Antes de tener la electrónica terminada, deberá existir una forma de simular tarjetas.
+
+Por ejemplo:
+
+```text
+SIMULAR CARD_001
+SIMULAR CARD_002
+SIMULAR CARD_003
+```
+
+Esto permitirá desarrollar la lógica de Godot sin depender del Arduino.
+
+La arquitectura quedaría:
+
+```text
+             ┌───────────────┐
+             │   SIMULADOR   │
+             └───────┬───────┘
+                     │
+                     ▼
+                EVENTO NFC
+                     ▲
+                     │
+             ┌───────┴───────┐
+             │    ARDUINO    │
+             └───────────────┘
+```
+
+Ambos sistemas producen el mismo tipo de evento.
+
+---
+
+# 19. Objetivo de compatibilidad
+
+El objetivo es que el código de Godot pueda funcionar inicialmente con datos simulados y posteriormente con Arduino sin necesidad de modificar la lógica de la experiencia.
+
+Ejemplo:
+
+```text
+SIMULADOR
+    │
+    └──────► card_detected()
+
+ARDUINO
+    │
+    └──────► card_detected()
+```
+
+El juego solamente recibe:
+
+---
+
+# Prototipo actual de la mecánica principal
+
+La primera versión funcional está en `scenes/main.tscn`. Simula la interacción
+con tarjetas sin requerir Arduino:
+
+* `1`: detecta Madera (`CARD_001`).
+* `2`: detecta Piedra (`CARD_002`).
+* `3`: detecta Hierro (`CARD_003`).
+* `R`: reinicia la experiencia.
+
+El puzzle acepta las tarjetas en el orden Madera → Piedra → Hierro. La lógica
+está separada en las siguientes capas:
+
+* `scripts/nfc_event_source.gd`: recibe o simula el protocolo NFC y emite
+  `card_detected(reader_id, uid)`.
+* `scripts/card_database.gd` y `data/cards.json`: convierten UID físicos en
+  tarjetas internas, editables sin tocar la lógica.
+* `scripts/game_controller.gd`: valida el estado del puzzle, bloquea
+  relecturas breves y emite el resultado hacia la interfaz.
+
+Para integrar Arduino, el adaptador del puerto serie solamente debe entregar
+cada línea recibida a `NfcEventSource.parse_serial_message(line)`. El formato
+aceptado es `READER=1;UID=04A1B2C3D4`.
+
+## Aplicación Android recomendada: Puente NFC → Godot
+
+La forma recomendada de hacer las pruebas es la mini aplicación incluida en
+`android_nfc_bridge`. La tarjeta contiene solamente texto NDEF con su JSON, y
+la aplicación envía ese texto a Godot por Wi-Fi. Por tanto, las tarjetas no
+dependen de la IP de la PC ni deben reescribirse al cambiar de red.
+
+La instalación, los datos de ejemplo y el uso están documentados en
+[`android_nfc_bridge/README.md`](../android_nfc_bridge/README.md).
+
+### Catálogo actual de tarjetas
+
+Este es el catálogo canónico, compartido por `data/cards.json`, la app Android
+y el puzzle de Godot. El orden válido del prototipo es Madera → Piedra → Hierro.
+
+| Ítem | ID | Nombre | Tipo |
+| --- | --- | --- | --- |
+| Madera | `CARD_001` | `Madera` | `wood` |
+| Piedra | `CARD_002` | `Piedra` | `stone` |
+| Hierro | `CARD_003` | `Hierro` | `iron` |
+
+La app permite seleccionar estos ítems al grabar, por lo que no hace falta
+buscar ni copiar manualmente los valores.
+
+## Prueba Android por Wi-Fi mediante URL (método anterior, no recomendado)
+
+Godot incluye un receptor local en el puerto `8080`. Al iniciar la escena, el
+mensaje verde muestra una URL como `http://192.168.1.50:8080/nfc`. La PC y el
+teléfono deben estar conectados a la misma red Wi-Fi.
+
+### Preparar el teléfono
+
+1. En Android activá **NFC** desde Ajustes. En un Poco suele estar en
+   `Ajustes > Conexión y compartir > NFC`.
+2. Conectá el teléfono a la misma Wi-Fi que la computadora. No uses una red de
+   invitados, porque normalmente impide que los dispositivos se vean entre sí.
+3. Instalá **NFC Tools** desde Play Store.
+4. Ejecutá el proyecto en Godot. La pantalla mostrará una dirección de red. Se
+   debe usar la de la Wi-Fi local, normalmente `192.168.x.x`; ignorá direcciones
+   `100.x.x.x`, que suelen pertenecer a una VPN.
+
+### Comprobar la conexión antes de grabar una tarjeta
+
+En el navegador del teléfono abrí la URL base que muestra Godot, por ejemplo:
+
+```text
+http://192.168.100.48:8080/nfc
+```
+
+Debe aparecer `Servidor NFC activo`. Si no abre, permití a Godot conexiones en
+redes privadas en el firewall del sistema. No continúes hasta que esta prueba
+funcione.
+
+### Escribir una tarjeta NFC
+
+Para esta prueba, la tarjeta lleva un registro NDEF de tipo **URL / URI**. No
+uses `Custom text`: Android debe abrir el enlace automáticamente al leerla.
+
+1. Abrí **NFC Tools** y entrá en `Write`.
+2. Elegí `Add a record` y luego `URL / URI` (el nombre puede variar levemente
+   según el idioma de la aplicación).
+3. Pegá una URL completa de la tabla siguiente, sustituyendo
+   `192.168.100.48` por la IP que muestra tu juego.
+4. Elegí `Write` y apoyá la parte trasera del teléfono sobre la tarjeta hasta
+   que la app confirme la escritura.
+5. Volvé a `Read` en NFC Tools y comprobá que el registro sea de tipo URI y
+   contenga la URL correcta.
+6. No bloquees la tarjeta mientras estés probando: así podrás reescribirla si
+   cambia la IP o el contenido.
+
+| Tarjeta | URL a grabar |
+| --- | --- |
+| Madera | `http://192.168.100.48:8080/nfc?d=%7B%22v%22%3A1%2C%22id%22%3A%22CARD_001%22%2C%22n%22%3A%22Madera%22%2C%22t%22%3A%22wood%22%7D` |
+| Piedra | `http://192.168.100.48:8080/nfc?d=%7B%22v%22%3A1%2C%22id%22%3A%22CARD_002%22%2C%22n%22%3A%22Piedra%22%2C%22t%22%3A%22stone%22%7D` |
+| Hierro | `http://192.168.100.48:8080/nfc?d=%7B%22v%22%3A1%2C%22id%22%3A%22CARD_003%22%2C%22n%22%3A%22Hierro%22%2C%22t%22%3A%22iron%22%7D` |
+
+Al acercar la tarjeta al teléfono, Android abrirá el navegador. Si la página
+indica `Tarjeta recibida`, el juego habrá recibido el evento. El orden válido
+del prototipo es Madera → Piedra → Hierro.
+
+### Formato de los datos
+
+La parte `d=` de la URL es un JSON codificado para URL. Antes de codificarlo,
+Madera contiene:
+
+```json
+{"v":1,"id":"CARD_001","n":"Madera","t":"wood"}
+```
+
+`v` indica la versión del formato; `id` es la identidad estable de la tarjeta;
+`n` y `t` son nombre y tipo. Estas claves cortas permiten que el enlace entre
+con margen en una NTAG213. Godot las convierte a `name` y `type` internamente.
+
+### Problemas frecuentes
+
+* **"Ruta no encontrada"**: se abrió una dirección diferente de `/nfc` o falta
+  la ruta en la URL. Usá exactamente la URL de la tabla.
+* **"Falta el parametro d"**: se grabó solo la URL base. Debe incluir todo lo
+  que sigue a `?d=`.
+* **El navegador no conecta**: revisá Wi-Fi, IP y firewall. La IP debe ser la
+  local (`192.168...`), no la VPN (`100...`).
+* **El navegador muestra "Tarjeta recibida" pero el juego no cambia**: revisá
+  que `id` sea `CARD_001`, `CARD_002` o `CARD_003`, y respetá el orden del
+  puzzle.
+* **La IP cambia al cambiar de red**: reescribí las URLs con la IP nueva. Para
+  la instalación final se recomienda una app Android que lea un NDEF de texto
+  y envíe los datos a Godot; así las tarjetas no dependen de la red.
+
+La URL de ejemplo tiene este formato (reemplazando la IP
+por la que muestra Godot):
+
+```text
+http://192.168.1.50:8080/nfc?d=%7B%22v%22%3A1%2C%22id%22%3A%22CARD_001%22%2C%22n%22%3A%22Madera%22%2C%22t%22%3A%22wood%22%7D
+```
+
+```text
+card_detected()
+```
+
+---
+
+# 20. Estructura conceptual del proyecto Godot
+
+Una posible estructura será:
+
+```text
+project/
+│
+├── scenes/
+│
+├── scripts/
+│   ├── core/
+│   ├── nfc/
+│   ├── cards/
+│   ├── serial/
+│   └── game/
+│
+├── data/
+│   └── cards/
+│
+├── ui/
+│
+└── tests/
+```
+
+La estructura definitiva podrá modificarse a medida que avance el proyecto.
+
+---
+
+# 21. Orden recomendado de desarrollo
+
+El orden recomendado será:
+
+```text
+1. Proyecto Godot
+        ↓
+2. Sistema de eventos
+        ↓
+3. Simulador NFC
+        ↓
+4. Sistema de tarjetas
+        ↓
+5. Lógica de estados
+        ↓
+6. Comunicación serial
+        ↓
+7. Arduino
+        ↓
+8. Un lector NFC
+        ↓
+9. Múltiples lectores
+        ↓
+10. Integración completa
+        ↓
+11. Pruebas de estabilidad
+        ↓
+12. Preparación para exposición
+```
+
+No conviene comenzar por la electrónica completa si todavía no sabemos exactamente cómo se comunicará con Godot.
+
+---
+
+# 22. Checklist técnico
+
+## Godot
+
+* [ ] Crear proyecto.
+* [ ] Crear escena principal.
+* [ ] Crear sistema de estados.
+* [ ] Crear sistema de eventos.
+* [ ] Crear sistema de tarjetas.
+* [ ] Crear sistema de simulación NFC.
+* [ ] Crear sistema de comunicación serial.
+* [ ] Crear parser de mensajes.
+* [ ] Crear manejo de errores.
+* [ ] Crear sistema de reinicio.
+
+## NFC
+
+* [ ] Determinar tecnología NFC a utilizar.
+* [ ] Determinar modelo de lectores.
+* [ ] Determinar modelo de tarjetas.
+* [ ] Probar lectura de UID.
+* [ ] Comprobar distancia de lectura.
+* [ ] Comprobar detección repetida.
+* [ ] Comprobar varias tarjetas.
+
+## Arduino
+
+* [ ] Elegir modelo de Arduino.
+* [ ] Probar comunicación USB.
+* [ ] Conectar un lector.
+* [ ] Leer UID.
+* [ ] Enviar UID por Serial.
+* [ ] Identificar lector.
+* [ ] Conectar múltiples lectores.
+* [ ] Probar funcionamiento continuo.
+* [ ] Probar desconexión/reconexión.
+
+## Integración
+
+* [ ] Arduino → Serial.
+* [ ] Serial → Godot.
+* [ ] Godot → UID.
+* [ ] UID → tarjeta.
+* [ ] Tarjeta → evento.
+* [ ] Evento → lógica.
+* [ ] Múltiples lectores.
+* [ ] Reinicio.
+* [ ] Prueba prolongada.
+
+---
+
+# 23. Criterio de éxito técnico
+
+El apartado técnico se considerará funcional cuando sea posible:
+
+1. Colocar una tarjeta NFC sobre un lector.
+2. Arduino detecta la tarjeta.
+3. Arduino obtiene su UID.
+4. Arduino identifica el lector utilizado.
+5. Arduino envía la información por USB/Serial.
+6. Godot recibe el mensaje.
+7. Godot identifica la tarjeta.
+8. Godot genera un evento.
+9. La lógica de la experiencia responde al evento.
+10. El sistema puede repetirse correctamente.
+11. Una lectura repetida no genera acciones incorrectas.
+12. El sistema puede recuperarse de una desconexión.
+
+---
+
+# 24. Principio de desarrollo
+
+El proyecto se desarrollará de forma incremental.
+
+Cada componente deberá probarse individualmente antes de integrarlo con el siguiente.
+
+La cadena de pruebas será:
+
+```text
+NFC
+ ↓
+Lector
+ ↓
+Arduino
+ ↓
+Serial
+ ↓
+Godot
+ ↓
+Evento
+ ↓
+Lógica
+```
+
+Si algo falla, se deberá determinar en qué punto de la cadena está el problema antes de continuar.
+
+No se deberá asumir que el problema está en Godot si todavía no se ha comprobado la comunicación del hardware.
+
+---
+
+# 25. Estado actual del proyecto
+
+Actualmente:
+
+* La idea general de interacción NFC está definida.
+* Godot será el software principal.
+* Se utilizarán tarjetas NFC.
+* La implementación final utilizará lectores NFC conectados a Arduino.
+* La comunicación prevista entre Arduino y Godot será mediante USB/Serial.
+* Se contempla el uso de múltiples lectores.
+* La arquitectura debe permitir desarrollar y probar el software antes de disponer de toda la electrónica.
+* El apartado artístico y creativo queda fuera del alcance de este documento.
+
+## Próximo objetivo técnico
+
+El primer objetivo será construir un **prototipo mínimo de comunicación**, sin intentar desarrollar todavía toda la experiencia.
+
+Objetivo:
+
+```text
+Arduino / simulador
+        ↓
+ID de tarjeta
+        ↓
+Godot
+        ↓
+Evento
+        ↓
+Respuesta visible
+```
+
+Una vez que esta cadena funcione correctamente, se continuará agregando complejidad.
