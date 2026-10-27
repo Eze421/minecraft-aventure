@@ -58,8 +58,9 @@ python3 ../arduino/serial_nfc_bridge.py --port /dev/ttyACM0
 
 En Windows reemplazá `/dev/ttyACM0` por el puerto, por ejemplo `COM3`. El
 puente reenvía el UID a `http://127.0.0.1:8080/nfc`; el receptor lo entrega a
-la misma lógica usada por el simulador. Si el Arduino cambia de puerto, solo
-hay que ajustar ese parámetro.
+la misma lógica usada por la app Android: busca el UID en `data/cards.json` y
+envía un JSON NDEF mediante el parámetro `d`. Si el Arduino cambia de puerto,
+solo hay que ajustar ese parámetro.
 
 El catálogo ya incluye los UID detectados y, por ahora, los asigna en el orden
 informado: `A22C711A` a Madera, `62C4FB1B` a Piedra y `044D49C2790000` a

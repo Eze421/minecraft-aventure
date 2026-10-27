@@ -18,7 +18,10 @@ baudios. Para reenviar esos eventos por USB al receptor local de Godot, usar
 
 El puente se ejecuta una sola vez y queda escuchando el puerto continuamente.
 También se reconecta automáticamente si el Arduino se desconecta y vuelve a
-conectarse.
+conectarse. Antes de enviar una lectura, busca el UID en
+`minecraft-aventure/data/cards.json` y transmite el mismo JSON NDEF (`d=...`)
+que utiliza la app Android. Así ambos lectores entregan exactamente el mismo
+tipo de evento al juego.
 
 Las guías detalladas están en
 [`minecraft-aventure/README.md`](minecraft-aventure/README.md) y
