@@ -15,6 +15,7 @@ func _ready() -> void:
 	nfc_events.card_data_detected.connect(game.process_card_data)
 	nfc_events.protocol_status.connect(_show_protocol_status)
 	http_receiver.nfc_payload_received.connect(nfc_events.parse_ndef_payload)
+	http_receiver.nfc_uid_received.connect(nfc_events.simulate)
 	http_receiver.server_status.connect(_show_server_status)
 	game.state_changed.connect(_show_state)
 	game.event_feedback.connect(_show_feedback)

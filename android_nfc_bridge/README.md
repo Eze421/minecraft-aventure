@@ -61,11 +61,26 @@ red cambiando una única dirección en la app.
 
 También podés grabar tarjetas sin NFC Tools: elegí el ítem en la lista. La app
 completa **ID interno**, **Nombre** y **Tipo** automáticamente. Luego tocá
-**Grabar tarjeta con estos datos** y acercá una tarjeta NDEF regrabable. Los
-campos siguen siendo editables si necesitás crear una tarjeta especial.
+**Grabar tarjeta con estos datos** y acercá una tarjeta NDEF regrabable. Si la
+tarjeta está virgen, la app intenta formatearla como NDEF antes de escribirla.
+Los campos siguen siendo editables si necesitás crear una tarjeta especial.
 
 ```json
 {"v":1,"id":"CARD_001","name":"Madera","type":"wood"}
 ```
 
 No bloquees las tarjetas durante las pruebas, para poder actualizarlas después.
+
+### Compatibilidad y tarjetas protegidas
+
+La app escribe cualquier tarjeta que el teléfono exponga como **NDEF writable**
+o que Android permita formatear a NDEF. Esto incluye normalmente las
+MIFARE Ultralight/NTAG regrabables y las MIFARE Classic que ya estén
+formateadas para NDEF y cuyas claves autoricen la escritura.
+
+Una MIFARE Classic 1K con sectores protegidos no puede reprogramarse sin las
+claves de esos sectores. Encontrar la clave `FF FF FF FF FF FF` solamente en
+el sector 0 no alcanza: el bloque 0 contiene datos del fabricante y los datos
+NDEF requieren sectores de datos autorizados. La app no intenta eludir ni
+adivinar claves. Para esas tarjetas, usá las claves proporcionadas por su
+propietario o reemplazalas por tarjetas NDEF regrabables nuevas.

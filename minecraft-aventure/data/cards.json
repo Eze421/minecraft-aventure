@@ -1,4 +1,7 @@
 {
+  "A22C711A": {"id": "CARD_001", "name": "Madera", "type": "wood"},
+  "62C4FB1B": {"id": "CARD_002", "name": "Piedra", "type": "stone"},
+  "044D49C2790000": {"id": "CARD_003", "name": "Hierro", "type": "iron"},
   "04A1B2C3D4": {"id": "CARD_001", "name": "Madera", "type": "wood"},
   "049F72AB31": {"id": "CARD_002", "name": "Piedra", "type": "stone"},
   "0478129ABC": {"id": "CARD_003", "name": "Hierro", "type": "iron"}

@@ -5,6 +5,8 @@ import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
+import android.nfc.tech.NdefFormatable;
+import android.nfc.tech.MifareClassic;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -27,7 +29,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/** Lector NDEF de texto para enviar tarjetas a Godot por Wi-Fi. */
+/** Lector y grabador NDEF de texto para enviar tarjetas a Godot por Wi-Fi. */
 public class MainActivity extends android.app.Activity {
     private static final String DEFAULT_ENDPOINT = "http://192.168.100.48:8080/nfc";
     private static final CardPreset[] CARD_PRESETS = {
@@ -235,7 +237,7 @@ public class MainActivity extends android.app.Activity {
         stopReading();
         mode = Mode.WRITE;
         payloadView.setText("");
-        showStatus("Listo para grabar. Acercá una tarjeta NFC ahora.");
+        showStatus("Listo para grabar. Se intentará escribir NDEF o formatear una tarjeta virgen compatible.");
         nfcAdapter.enableReaderMode(this, tag -> onTagRead(tag),
                 NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B, null);
         readerModeEnabled = true;
@@ -283,15 +285,21 @@ public class MainActivity extends android.app.Activity {
 
     private void writeNdefText(Tag tag) {
         String json = pendingWritePayload;
+        NdefMessage message = new NdefMessage(new NdefRecord[]{NdefRecord.createTextRecord("es", json)});
         try {
             Ndef ndef = Ndef.get(tag);
-            if (ndef == null) throw new Exception("La tarjeta no acepta NDEF.");
-            NdefMessage message = new NdefMessage(new NdefRecord[]{NdefRecord.createTextRecord("es", json)});
-            ndef.connect();
-            if (!ndef.isWritable()) throw new Exception("La tarjeta está bloqueada contra escritura.");
-            if (message.toByteArray().length > ndef.getMaxSize()) throw new Exception("No hay espacio suficiente en la tarjeta.");
-            ndef.writeNdefMessage(message);
-            ndef.close();
+            if (ndef != null) {
+                writeExistingNdef(ndef, message);
+            } else {
+                NdefFormatable formattable = NdefFormatable.get(tag);
+                if (formattable == null) throw new Exception(describeUnformattableTag(tag));
+                formattable.connect();
+                try {
+                    formattable.format(message);
+                } finally {
+                    formattable.close();
+                }
+            }
             String result = json;
             runOnUiThread(() -> {
                 stopReading();
@@ -299,12 +307,32 @@ public class MainActivity extends android.app.Activity {
                 payloadView.setText("Información escrita:\n" + result);
             });
         } catch (Exception error) {
-            String message = error.getMessage() == null ? "No se pudo grabar la tarjeta." : error.getMessage();
+            String errorMessage = error.getMessage() == null ? "No se pudo grabar la tarjeta." : error.getMessage();
             runOnUiThread(() -> {
                 stopReading();
-                showStatus("Error de grabado: " + message);
+                showStatus("Error de grabado: " + errorMessage);
             });
         }
+    }
+
+    private void writeExistingNdef(Ndef ndef, NdefMessage message) throws Exception {
+        ndef.connect();
+        try {
+            if (!ndef.isWritable()) throw new Exception("La tarjeta NDEF está bloqueada contra escritura.");
+            if (message.toByteArray().length > ndef.getMaxSize()) throw new Exception("No hay espacio suficiente en la tarjeta.");
+            ndef.writeNdefMessage(message);
+        } finally {
+            ndef.close();
+        }
+    }
+
+    private String describeUnformattableTag(Tag tag) {
+        MifareClassic classic = MifareClassic.get(tag);
+        if (classic != null) {
+            return "MIFARE Classic no está preparada para NDEF o sus sectores están protegidos. "
+                    + "Se necesitan las claves autorizadas de los sectores de datos; no se puede sobrescribir una tarjeta sin ellas.";
+        }
+        return "La tarjeta no expone NDEF ni admite formateo NDEF desde este teléfono.";
     }
 
     private String readNdefText(Tag tag) {

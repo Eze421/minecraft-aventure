@@ -1,11 +1,15 @@
-# Godot 4+ specific ignores
-.godot/
-/android/
+# Godot generated files
+minecraft-aventure/.godot/
+minecraft-aventure/android/
 
-# Android Studio / Gradle
+# Android Studio / Gradle generated files
 android_nfc_bridge/.gradle/
+android_nfc_bridge/.idea/
 android_nfc_bridge/local.properties
 android_nfc_bridge/app/build/
 android_nfc_bridge/build/
-android_nfc_bridge/.idea/
 *.apk
+
+# System files
+.DS_Store
+Thumbs.db

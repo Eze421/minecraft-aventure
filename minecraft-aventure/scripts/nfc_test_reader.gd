@@ -25,6 +25,7 @@ func _ready() -> void:
 	nfc_events.card_data_detected.connect(_on_card_data_received)
 	nfc_events.protocol_status.connect(func(message): print("[NFC] ", message))
 	http_receiver.nfc_payload_received.connect(nfc_events.parse_ndef_payload)
+	http_receiver.nfc_uid_received.connect(nfc_events.simulate)
 	http_receiver.server_status.connect(_on_server_status)
 
 func request_item(reference: String) -> bool:

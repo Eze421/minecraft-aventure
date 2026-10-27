@@ -4,6 +4,7 @@ extends Node
 ## Receptor HTTP local para las lecturas que el teléfono envía por Wi-Fi.
 ## Recibe: GET /nfc?d=<JSON-codificado-para-URL>&reader=1
 signal nfc_payload_received(reader_id: int, payload: String)
+signal nfc_uid_received(reader_id: int, uid: String)
 signal server_status(message: String, is_error: bool)
 
 const PORT := 8080
@@ -63,11 +64,20 @@ func _handle_request(client: StreamPeerTCP) -> void:
 		_reply(client, 404, "Ruta no encontrada.")
 		return
 	var parameters := _parse_query(target.get_slice("?", 1))
+	var reader_id := int(parameters.get("reader", "1"))
+	var uid := str(parameters.get("uid", "")).strip_edges().to_upper()
+	if not uid.is_empty():
+		if not uid.is_valid_hex_number():
+			_reply(client, 400, "El parametro uid debe ser hexadecimal.")
+			return
+		nfc_uid_received.emit(reader_id, uid)
+		_reply(client, 200, "UID recibido. Podes volver al juego.")
+		return
 	var data: String = parameters.get("d", "")
 	if data.is_empty():
 		_reply(client, 400, "Falta el parametro d.")
 		return
-	nfc_payload_received.emit(int(parameters.get("reader", "1")), data)
+	nfc_payload_received.emit(reader_id, data)
 	_reply(client, 200, "Tarjeta recibida. Podes volver al juego.")
 
 func _parse_query(query: String) -> Dictionary:
