@@ -10,7 +10,6 @@ signal item_requested(card: Dictionary)
 signal request_completed(card: Dictionary, reader_id: int)
 signal request_rejected(expected: Dictionary, received: Dictionary)
 
-const CARDS_DATA_PATH := "res://data/cards.json"
 const ITEMS_DATA_PATH := "res://data/items.json"
 
 var _database := CardDatabase.new()
@@ -22,12 +21,11 @@ var _requested_card: Dictionary = {}
 func _ready() -> void:
 	add_to_group("nfc_test_reader")
 	add_to_group("nfc_reader")
-	_database.load_from_files(CARDS_DATA_PATH, ITEMS_DATA_PATH)
-	nfc_events.card_detected.connect(_on_uid_received)
+	_database.load_from_file(ITEMS_DATA_PATH)
 	nfc_events.card_data_detected.connect(_on_card_data_received)
 	nfc_events.protocol_status.connect(func(message): print("[NFC] ", message))
 	http_receiver.nfc_payload_received.connect(nfc_events.parse_ndef_payload)
-	http_receiver.nfc_uid_received.connect(nfc_events.simulate)
+	http_receiver.nfc_uid_received.connect(nfc_events.report_uid)
 	http_receiver.server_status.connect(_on_server_status)
 
 func request_item(reference: String) -> bool:
@@ -39,14 +37,6 @@ func request_item(reference: String) -> bool:
 	print("[Gameplay] Solicitud NFC activa: ", card.get("id"), " (", card.get("name"), ")")
 	item_requested.emit(card)
 	return true
-
-func _on_uid_received(reader_id: int, uid: String) -> void:
-	print("[NFC] Datos recibidos — lector %d, UID: %s" % [reader_id, uid])
-	var card := _database.find_by_uid(uid)
-	if card.is_empty():
-		print("[NFC] Lector %d recibió UID desconocido: %s" % [reader_id, uid])
-		return
-	_register_card(card, reader_id)
 
 func _on_card_data_received(reader_id: int, card_data: Dictionary) -> void:
 	print("[NFC] Datos recibidos — lector %d, NDEF: %s" % [reader_id, card_data])

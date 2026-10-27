@@ -8,14 +8,17 @@ extends Control
 @onready var feedback_label: Label = %Feedback
 @onready var progress_label: Label = %Progress
 
-const SIMULATED_UIDS := ["04A1B2C3D4", "049F72AB31", "0478129ABC"]
+const SIMULATED_NDEF := [
+	'{"v":1,"id":"CARD_001","name":"Madera","type":"wood"}',
+	'{"v":1,"id":"CARD_002","name":"Piedra","type":"stone"}',
+	'{"v":1,"id":"CARD_003","name":"Hierro","type":"iron"}',
+]
 
 func _ready() -> void:
-	nfc_events.card_detected.connect(game.process_card)
 	nfc_events.card_data_detected.connect(game.process_card_data)
 	nfc_events.protocol_status.connect(_show_protocol_status)
 	http_receiver.nfc_payload_received.connect(nfc_events.parse_ndef_payload)
-	http_receiver.nfc_uid_received.connect(nfc_events.simulate)
+	http_receiver.nfc_uid_received.connect(nfc_events.report_uid)
 	http_receiver.server_status.connect(_show_server_status)
 	game.state_changed.connect(_show_state)
 	game.event_feedback.connect(_show_feedback)
@@ -27,11 +30,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	match event.keycode:
 		KEY_1, KEY_KP_1:
-			nfc_events.simulate(1, SIMULATED_UIDS[0])
+			nfc_events.simulate_payload(1, SIMULATED_NDEF[0])
 		KEY_2, KEY_KP_2:
-			nfc_events.simulate(1, SIMULATED_UIDS[1])
+			nfc_events.simulate_payload(1, SIMULATED_NDEF[1])
 		KEY_3, KEY_KP_3:
-			nfc_events.simulate(1, SIMULATED_UIDS[2])
+			nfc_events.simulate_payload(1, SIMULATED_NDEF[2])
 		KEY_R:
 			game.restart()
 

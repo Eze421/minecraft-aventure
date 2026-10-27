@@ -13,15 +13,21 @@ func parse_serial_message(message: String) -> void:
 		protocol_status.emit(line)
 		return
 	var matcher := RegEx.new()
-	matcher.compile("^READER=(\\d+);UID=([0-9A-Fa-f]+)$")
+	matcher.compile("^READER=(\\d+);NDEF=(.+)$")
 	var result := matcher.search(line)
 	if result == null:
+		if line.begins_with("READER=") and line.contains(";UID="):
+			protocol_status.emit("UID recibido sin NDEF: no identifica el ítem para el juego.")
+			return
 		protocol_status.emit("Mensaje NFC inválido: " + line)
 		return
-	card_detected.emit(result.get_string(1).to_int(), result.get_string(2).to_upper())
+	parse_ndef_payload(result.get_string(1).to_int(), result.get_string(2))
 
-func simulate(reader_id: int, uid: String) -> void:
-	card_detected.emit(reader_id, uid.to_upper())
+func simulate_payload(reader_id: int, payload: String) -> void:
+	parse_ndef_payload(reader_id, payload)
+
+func report_uid(reader_id: int, uid: String) -> void:
+	protocol_status.emit("Lector %d recibió UID %s sin datos NDEF." % [reader_id, uid])
 
 func parse_ndef_payload(reader_id: int, payload: String) -> void:
 	var parsed = JSON.parse_string(payload)

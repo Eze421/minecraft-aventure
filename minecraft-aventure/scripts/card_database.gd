@@ -1,23 +1,14 @@
 class_name CardDatabase
 extends RefCounted
 
-var _cards_by_uid: Dictionary = {}
 var _items_by_id: Dictionary = {}
 
-func load_from_files(cards_path: String, items_path: String) -> Error:
-	var cards := _read_dictionary(cards_path)
-	if cards.is_empty():
-		return ERR_FILE_NOT_FOUND
+func load_from_file(items_path: String) -> Error:
 	var items := _read_dictionary(items_path)
 	if items.is_empty():
 		return ERR_FILE_NOT_FOUND
-	_cards_by_uid = cards
 	_items_by_id = items
 	return OK
-
-func find_by_uid(uid: String) -> Dictionary:
-	var item_id := str(_cards_by_uid.get(uid.strip_edges().to_upper(), ""))
-	return find_by_id(item_id)
 
 func find_by_id(card_id: String) -> Dictionary:
 	var item: Dictionary = _items_by_id.get(card_id, {})

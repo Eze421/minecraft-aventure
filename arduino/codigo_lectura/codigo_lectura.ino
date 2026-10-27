@@ -14,8 +14,8 @@
  *
  * Instalá desde el Library Manager la biblioteca "MFRC522" de Miguel Balboa.
  * Para activar más lectores, aumentá ACTIVE_READER_COUNT hasta un máximo de 9.
- * Cada lectura se imprime como: READER=1;UID=04A1B2C3D4
- * Ese es el formato que NfcEventSource.parse_serial_message() ya entiende.
+ * Cada lectura NDEF se imprime como: READER=1;NDEF={"v":1,...}
+ * El UID se muestra solo para diagnóstico: no identifica el objeto del juego.
  */
 
 #include <SPI.h>
@@ -68,6 +68,53 @@ String readUid(MFRC522 &rfid) {
   return uid;
 }
 
+// Lee un registro NDEF de texto en NTAG213/215 (NFC-A Type 2). El contenido
+// debe ser el JSON de la tarjeta, por ejemplo {"v":1,"id":"CARD_001",...}.
+bool readNdefText(MFRC522 &rfid, String &text) {
+  const uint16_t maxBytes = 160; // Suficiente para el JSON actual en NTAG213.
+  byte data[maxBytes];
+  uint16_t count = 0;
+  for (byte page = 4; count < maxBytes; page += 4) {
+    byte buffer[18];
+    byte size = sizeof(buffer);
+    if (rfid.MIFARE_Read(page, buffer, &size) != MFRC522::STATUS_OK) return false;
+    for (byte index = 0; index < 16 && count < maxBytes; index++) data[count++] = buffer[index];
+  }
+
+  uint16_t tlv = 0;
+  while (tlv < count && data[tlv] == 0x00) tlv++;
+  if (tlv >= count || data[tlv++] != 0x03) return false; // NDEF TLV
+  uint16_t ndefLength = data[tlv++];
+  if (ndefLength == 0xFF) {
+    if (tlv + 1 >= count) return false;
+    ndefLength = (uint16_t(data[tlv]) << 8) | data[tlv + 1];
+    tlv += 2;
+  }
+  if (tlv + ndefLength > count || ndefLength < 5) return false;
+
+  const uint16_t end = tlv + ndefLength;
+  const byte header = data[tlv++];
+  const byte typeLength = data[tlv++];
+  uint32_t payloadLength = 0;
+  if (header & 0x10) payloadLength = data[tlv++]; // Short Record
+  else {
+    if (tlv + 3 >= end) return false;
+    payloadLength = (uint32_t(data[tlv]) << 24) | (uint32_t(data[tlv + 1]) << 16) |
+                    (uint32_t(data[tlv + 2]) << 8) | data[tlv + 3];
+    tlv += 4;
+  }
+  if (typeLength != 1 || tlv + typeLength + payloadLength > end || data[tlv] != 'T') return false;
+  tlv += typeLength;
+  if (payloadLength < 1) return false;
+  const byte languageLength = data[tlv] & 0x3F;
+  tlv += 1 + languageLength;
+  payloadLength -= 1 + languageLength;
+  if (tlv + payloadLength > end) return false;
+  text = "";
+  for (uint32_t index = 0; index < payloadLength; index++) text += char(data[tlv + index]);
+  return text.startsWith("{") && text.endsWith("}");
+}
+
 void setup() {
   Serial.begin(115200);
   SPI.begin();
@@ -105,11 +152,16 @@ void scanReader(MFRC522 &rfid, byte readerId, String &lastUid, unsigned long &la
     Serial.print(F("[RC522] Tipo: "));
     Serial.println(rfid.PICC_GetTypeName(type));
 
-    // Línea estable para el juego y para serial_nfc_bridge.py.
-    Serial.print(F("READER="));
-    Serial.print(readerId);
-    Serial.print(F(";UID="));
-    Serial.println(uid);
+    String ndef;
+    if (readNdefText(rfid, ndef)) {
+      // Línea estable para serial_nfc_bridge.py: conserva el contenido físico.
+      Serial.print(F("READER="));
+      Serial.print(readerId);
+      Serial.print(F(";NDEF="));
+      Serial.println(ndef);
+    } else {
+      Serial.println(F("[RC522] No se encontró un NDEF de texto compatible."));
+    }
 
     lastUid = uid;
     lastReadAt = now;

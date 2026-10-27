@@ -29,7 +29,7 @@ receptor HTTP de Godot. Las tarjetas no guardan ninguna IP ni URL.
 `../minecraft-aventure/data/items.json` es el catálogo canónico de Godot. La
 lista de grabado rápido de la app usa los mismos ID, nombres y tipos; si se
 agrega un ítem al catálogo, agregalo también a la lista de presets de la app.
-`cards.json` queda reservado para relacionar UID físicos con esos ID.
+Cada tarjeta guarda esos datos en su NDEF; el UID físico no se usa como ID.
 
 | Ítem | ID | Nombre | Tipo |
 | --- | --- | --- | --- |

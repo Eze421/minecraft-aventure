@@ -7,18 +7,15 @@ signal progress_changed(current: int, total: int)
 signal nfc_requested(card: Dictionary)
 signal nfc_request_completed(card: Dictionary, reader_id: int)
 
-const CARDS_DATA_PATH := "res://data/cards.json"
 const ITEMS_DATA_PATH := "res://data/items.json"
-const REPEAT_LOCK_SECONDS := 1.2
 
 var _database := CardDatabase.new()
 var _expected_cards := ["CARD_001", "CARD_002", "CARD_003"]
 var _step := 0
-var _locked_uids: Dictionary = {}
 var _requested_card: Dictionary = {}
 
 func initialize() -> void:
-	var error := _database.load_from_files(CARDS_DATA_PATH, ITEMS_DATA_PATH)
+	var error := _database.load_from_file(ITEMS_DATA_PATH)
 	if error != OK:
 		event_feedback.emit("No se pudo cargar la base de tarjetas.", false)
 		return
@@ -39,23 +36,9 @@ func request_nfc(card_reference: String) -> bool:
 	nfc_requested.emit(card)
 	return true
 
-func process_card(reader_id: int, uid: String) -> void:
-	# Una lectura de fondo no debe bloquear una futura solicitud.
-	if _requested_card.is_empty():
-		return
-	var now := Time.get_ticks_msec() / 1000.0
-	if _locked_uids.get(uid, 0.0) > now:
-		return
-	_locked_uids[uid] = now + REPEAT_LOCK_SECONDS
-
-	var card := _database.find_by_uid(uid)
-	if card.is_empty():
-		return
-	_process_known_card(reader_id, card)
-
 func process_card_data(reader_id: int, card: Dictionary) -> void:
-	# Los datos externos solo aportan un ID. El catálogo local es la fuente de
-	# verdad para nombre/tipo y para decidir si es un objeto permitido.
+	# El NDEF físico identifica el objeto. El catálogo local solo valida que sea
+	# un ítem permitido y aporta textos consistentes para la interfaz.
 	var catalog_card := _database.find_by_id(str(card.get("id", "")))
 	if not catalog_card.is_empty():
 		_process_known_card(reader_id, catalog_card)
@@ -80,7 +63,6 @@ func _process_known_card(reader_id: int, card: Dictionary) -> void:
 
 func restart() -> void:
 	_step = 0
-	_locked_uids.clear()
 	progress_changed.emit(0, _expected_cards.size())
 	event_feedback.emit("Partida reiniciada.", true)
 	request_nfc(_expected_cards[_step])

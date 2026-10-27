@@ -60,15 +60,13 @@ python3 ../arduino/serial_nfc_bridge.py --port /dev/ttyACM0
 ```
 
 En Windows reemplazá `/dev/ttyACM0` por el puerto, por ejemplo `COM3`. El
-puente reenvía el UID a `http://127.0.0.1:8080/nfc`; el receptor lo entrega a
-la misma lógica usada por la app Android: busca el UID en `data/cards.json`,
-resuelve el ítem en `data/items.json` y envía un JSON NDEF mediante el
-parámetro `d`. Si el Arduino cambia de puerto, solo hay que ajustar ese
-parámetro.
+puente reenvía el NDEF físico a `http://127.0.0.1:8080/nfc`; el receptor lo
+entrega a la misma lógica usada por la app Android mediante el parámetro `d`.
+El UID solo se imprime para diagnóstico y no determina el objeto. Si el
+Arduino cambia de puerto, solo hay que ajustar ese parámetro.
 
-El catálogo ya incluye los UID detectados y, por ahora, los asigna en el orden
-informado: `A22C711A` a Madera, `62C4FB1B` a Piedra y `044D49C2790000` a
-Hierro. Cambiá esas asociaciones en `data/cards.json` si querés otro orden.
+Cada tarjeta debe contener su propio JSON NDEF. Cambiar una tarjeta por otra
+no requiere registrar su UID: basta grabar el mismo `id`, `name` y `type`.
 
 ## Requisitos
 
@@ -112,10 +110,9 @@ La guía detallada está en [`android_nfc_bridge/README.md`](android_nfc_bridge/
 ## Catálogo de ítems y UIDs
 
 `data/items.json` es el catálogo canónico: contiene la identidad estable y los
-datos de todos los ítems. `data/cards.json` solo relaciona el UID físico de
-cada chip con un ID del catálogo; se puede editar o reemplazar un chip sin
-cambiar la lógica del juego. La lista de grabado rápido Android usa los mismos
-ID, nombres y tipos.
+datos de todos los ítems permitidos. Cada chip guarda esos mismos datos en su
+NDEF; su UID físico no se usa como identidad. La lista de grabado rápido
+Android usa los mismos ID, nombres y tipos.
 
 | Ítem | ID | Nombre | Tipo |
 | --- | --- | --- | --- |
@@ -195,7 +192,6 @@ gameplay.
 scenes/                 Escenas de Godot
 scripts/                Lógica de juego, NFC y receptor HTTP
 data/items.json         Catálogo canónico: ID, nombre, tipo y descripción
-data/cards.json         Mapeo de UID físico a ID de items.json
 android_nfc_bridge/     Aplicación Android lectora/grabadora NDEF
 documents/readme.me     Documentación técnica extendida
 ```

@@ -18,6 +18,6 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	match event.keycode:
 		KEY_1, KEY_KP_1:
-			reader.nfc_events.simulate(1, "A22C711A") # Madera
+			reader.nfc_events.simulate_payload(1, '{"v":1,"id":"CARD_001","name":"Madera","type":"wood"}')
 		KEY_2, KEY_KP_2:
-			reader.nfc_events.simulate(2, "62C4FB1B") # Piedra
+			reader.nfc_events.simulate_payload(2, '{"v":1,"id":"CARD_002","name":"Piedra","type":"stone"}')

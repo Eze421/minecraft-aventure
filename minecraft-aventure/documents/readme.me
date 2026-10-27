@@ -635,9 +635,8 @@ está separada en las siguientes capas:
 
 * `scripts/nfc_event_source.gd`: recibe o simula el protocolo NFC y emite
   `card_detected(reader_id, uid)`.
-* `scripts/card_database.gd`, `data/cards.json` y `data/items.json`: convierten
-  UID físicos en ID de ítem y luego en tarjetas internas, editables sin tocar
-  la lógica.
+* `scripts/card_database.gd` y `data/items.json`: validan el ID recibido desde
+  el NDEF físico contra los ítems permitidos, sin usar el UID del chip.
 * `scripts/game_controller.gd`: valida el estado del puzzle, bloquea
   relecturas breves y emite el resultado hacia la interfaz.
 
@@ -692,9 +691,9 @@ activa una espera con `start()` y recibe las señales `item_accepted`,
 ### Catálogo actual de tarjetas
 
 `data/items.json` es el catálogo canónico de ID, nombre, tipo y descripción.
-`data/cards.json` solo vincula cada UID físico con uno de esos ID; se puede
-reemplazar un chip sin modificar la lógica. La app Android usa los mismos ID,
-nombres y tipos para sus presets de grabado rápido.
+Cada tarjeta guarda esos datos en su NDEF y puede reemplazarse sin modificar la
+lógica ni registrar su UID. La app Android usa los mismos ID, nombres y tipos
+para sus presets de grabado rápido.
 
 | Ítem | ID | Nombre | Tipo |
 | --- | --- | --- | --- |
