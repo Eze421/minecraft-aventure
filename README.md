@@ -16,6 +16,10 @@ Usa un Arduino Mega 2560 con RC522 y emite eventos `READER=1;UID=...` a 115200
 baudios. Para reenviar esos eventos por USB al receptor local de Godot, usar
 [`arduino/serial_nfc_bridge.py`](arduino/serial_nfc_bridge.py).
 
+El puente se ejecuta una sola vez y queda escuchando el puerto continuamente.
+También se reconecta automáticamente si el Arduino se desconecta y vuelve a
+conectarse.
+
 Las guías detalladas están en
 [`minecraft-aventure/README.md`](minecraft-aventure/README.md) y
 [`android_nfc_bridge/README.md`](android_nfc_bridge/README.md).
