@@ -146,6 +146,28 @@ existe. Solo la tarjeta solicitada completa la espera. Las lecturas ocurridas
 sin una solicitud activa se ignoran; las tarjetas equivocadas no avanzan el
 juego. Al aceptar una lectura se emite `nfc_request_completed(card, reader_id)`.
 
+## Componente reutilizable: NfcRequirement
+
+La escena [`scenes/components/nfc_requirement.tscn`](scenes/components/nfc_requirement.tscn)
+es un nodo reutilizable para cualquier puzzle. Instanciala dentro de la escena
+de gameplay y configurá en el Inspector:
+
+- `required_items`: lista de ID, nombres o tipos; por ejemplo `wood`,
+  `CARD_002` o `Madera`.
+- `required_reader_id`: `0` para cualquier lector o `1` a `9` para exigir una
+  posición física específica.
+- `start_on_ready`: inicia el requisito automáticamente, si corresponde.
+
+Cuando el gameplay deba comenzar la interacción, llamá:
+
+```gdscript
+$NfcRequirement.start()
+```
+
+Si hay varios ítems requeridos, deben leerse todos; cada lectura correcta emite
+`item_accepted` y al completar la lista se emite `completed`. Una tarjeta
+incorrecta o leída desde otro lector emite `rejected`.
+
 ## Escena aislada de prueba NFC
 
 Abrí y ejecutá `scenes/nfc_test.tscn` para comprobar la arquitectura sin tocar

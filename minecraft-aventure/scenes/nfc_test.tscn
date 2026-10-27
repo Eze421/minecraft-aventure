@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://c5btb5qmg2s0c"]
+[gd_scene load_steps=8 format=3 uid="uid://c5btb5qmg2s0c"]
 
 [ext_resource type="Script" uid="uid://cgfomeftmunsk" path="res://scripts/nfc_test_scene.gd" id="1_scene"]
 [ext_resource type="Script" uid="uid://bbc3c5rajystn" path="res://scripts/nfc_test_reader.gd" id="2_reader"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bsot3ljqv7hcr" path="res://scripts/http_nfc_receiver.gd" id="4_http"]
 [ext_resource type="Script" uid="uid://b56clg1r8xc8p" path="res://scripts/nfc_test_player.gd" id="5_player"]
 [ext_resource type="Script" uid="uid://bbutu75pq581d" path="res://scripts/nfc_test_zone.gd" id="6_zone"]
+[ext_resource type="PackedScene" path="res://scenes/components/nfc_requirement.tscn" id="7_requirement"]
 
 [sub_resource type="StyleBoxFlat" id="BlockStyle"]
 bg_color = Color(0.45, 0.26, 0.1, 1)
@@ -50,6 +51,10 @@ script = ExtResource("3_events")
 script = ExtResource("4_http")
 
 [node name="GameplayLayer" type="Node2D" parent="." unique_id=1673582098]
+
+[node name="WoodRequirement" parent="GameplayLayer" instance=ExtResource("7_requirement")]
+required_items = PackedStringArray("wood")
+required_reader_id = 1
 
 [node name="Ground" type="ColorRect" parent="GameplayLayer" unique_id=733982370]
 offset_left = 50.0
@@ -100,7 +105,7 @@ text = "Flechas: mover jugador · 1: simular Madera"
 [node name="RequestWoodZone" type="Area2D" parent="GameplayLayer" unique_id=1258559409]
 position = Vector2(600, 360)
 script = ExtResource("6_zone")
-requested_item = "stone"
+requirement_path = NodePath("../WoodRequirement")
 
 [node name="Block" type="Panel" parent="GameplayLayer/RequestWoodZone" unique_id=954171295]
 offset_left = -65.0
@@ -117,8 +122,7 @@ offset_right = 55.0
 offset_bottom = 28.0
 theme_override_colors/font_color = Color(1, 0.94, 0.67, 1)
 theme_override_font_sizes/font_size = 18
-text = "PEDIR
-MADERA"
+text = "PEDIR\nMADERA\nLector 1"
 horizontal_alignment = 1
 vertical_alignment = 1
 

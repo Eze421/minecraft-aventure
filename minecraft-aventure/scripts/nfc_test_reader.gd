@@ -20,6 +20,7 @@ var _requested_card: Dictionary = {}
 
 func _ready() -> void:
 	add_to_group("nfc_test_reader")
+	add_to_group("nfc_reader")
 	_database.load_from_file(CARD_DATA_PATH)
 	nfc_events.card_detected.connect(_on_uid_received)
 	nfc_events.card_data_detected.connect(_on_card_data_received)

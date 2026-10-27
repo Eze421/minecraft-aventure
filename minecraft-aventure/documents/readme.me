@@ -677,6 +677,15 @@ jugador azul y un bloque dorado: al entrar en su `Area2D`, solicita Madera con
 `request_item("wood")`. La lectura solo llega al gameplay después de esa
 solicitud; antes de ella queda registrada únicamente como diagnóstico.
 
+### Componente configurable de requisitos
+
+`scenes/components/nfc_requirement.tscn` es un nodo reutilizable para futuros
+puzzles. Desde el Inspector permite configurar `required_items` como una lista
+de ID, nombres o tipos de tarjeta, y `required_reader_id` como el lector físico
+obligatorio (`0` acepta cualquiera; `1` a `9` exige ese lector). El gameplay
+activa una espera con `start()` y recibe las señales `item_accepted`,
+`rejected` y `completed`.
+
 ### Catálogo actual de tarjetas
 
 Este es el catálogo canónico, compartido por `data/cards.json`, la app Android
