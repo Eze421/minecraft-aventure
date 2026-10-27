@@ -22,10 +22,11 @@ L7 `39/11`, L8 `37/12`, L9 `35/13`. Para activar más lectores se incrementa
 
 El puente se ejecuta una sola vez y queda escuchando el puerto continuamente.
 También se reconecta automáticamente si el Arduino se desconecta y vuelve a
-conectarse. Antes de enviar una lectura, busca el UID en
-`minecraft-aventure/data/cards.json` y transmite el mismo JSON NDEF (`d=...`)
-que utiliza la app Android. Así ambos lectores entregan exactamente el mismo
-tipo de evento al juego.
+conectarse. Antes de enviar una lectura, resuelve el UID con
+`minecraft-aventure/data/cards.json` y obtiene los datos estables del ítem en
+`minecraft-aventure/data/items.json`. Luego transmite el mismo JSON NDEF
+(`d=...`) que utiliza la app Android. Así ambos lectores entregan exactamente
+el mismo tipo de evento al juego.
 
 Las guías detalladas están en
 [`minecraft-aventure/README.md`](minecraft-aventure/README.md) y

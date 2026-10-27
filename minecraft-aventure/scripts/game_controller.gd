@@ -7,7 +7,8 @@ signal progress_changed(current: int, total: int)
 signal nfc_requested(card: Dictionary)
 signal nfc_request_completed(card: Dictionary, reader_id: int)
 
-const CARD_DATA_PATH := "res://data/cards.json"
+const CARDS_DATA_PATH := "res://data/cards.json"
+const ITEMS_DATA_PATH := "res://data/items.json"
 const REPEAT_LOCK_SECONDS := 1.2
 
 var _database := CardDatabase.new()
@@ -17,7 +18,7 @@ var _locked_uids: Dictionary = {}
 var _requested_card: Dictionary = {}
 
 func initialize() -> void:
-	var error := _database.load_from_file(CARD_DATA_PATH)
+	var error := _database.load_from_files(CARDS_DATA_PATH, ITEMS_DATA_PATH)
 	if error != OK:
 		event_feedback.emit("No se pudo cargar la base de tarjetas.", false)
 		return

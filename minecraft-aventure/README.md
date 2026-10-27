@@ -61,9 +61,10 @@ python3 ../arduino/serial_nfc_bridge.py --port /dev/ttyACM0
 
 En Windows reemplazá `/dev/ttyACM0` por el puerto, por ejemplo `COM3`. El
 puente reenvía el UID a `http://127.0.0.1:8080/nfc`; el receptor lo entrega a
-la misma lógica usada por la app Android: busca el UID en `data/cards.json` y
-envía un JSON NDEF mediante el parámetro `d`. Si el Arduino cambia de puerto,
-solo hay que ajustar ese parámetro.
+la misma lógica usada por la app Android: busca el UID en `data/cards.json`,
+resuelve el ítem en `data/items.json` y envía un JSON NDEF mediante el
+parámetro `d`. Si el Arduino cambia de puerto, solo hay que ajustar ese
+parámetro.
 
 El catálogo ya incluye los UID detectados y, por ahora, los asigna en el orden
 informado: `A22C711A` a Madera, `62C4FB1B` a Piedra y `044D49C2790000` a
@@ -108,9 +109,13 @@ PC ni URLs.
 
 La guía detallada está en [`android_nfc_bridge/README.md`](android_nfc_bridge/README.md).
 
-## Catálogo de tarjetas
+## Catálogo de ítems y UIDs
 
-Este catálogo es consistente entre Godot, la app Android y la documentación.
+`data/items.json` es el catálogo canónico: contiene la identidad estable y los
+datos de todos los ítems. `data/cards.json` solo relaciona el UID físico de
+cada chip con un ID del catálogo; se puede editar o reemplazar un chip sin
+cambiar la lógica del juego. La lista de grabado rápido Android usa los mismos
+ID, nombres y tipos.
 
 | Ítem | ID | Nombre | Tipo |
 | --- | --- | --- | --- |
@@ -178,16 +183,19 @@ la escena principal. La escena contiene dos capas:
 - `GameplayLayer`: contiene un jugador azul y un bloque dorado. Al entrar en
   el `Area2D` del bloque, el gameplay llama `request_item("wood")`.
 
-Mové el jugador con las flechas. Una vez activada la zona, escaneá Madera con
-la app Android o presioná `1` para simularla. Una tarjeta leída antes de entrar
-en el área queda solo registrada en Output y no modifica el gameplay.
+Mové el jugador con las flechas. Una vez activada la zona, escaneá **Madera y
+Piedra**, en cualquier orden y desde cualquier lector, con la app Android o
+presioná `1` y `2` para simularlas desde los lectores 1 y 2. Una tarjeta leída
+antes de entrar en el área queda solo registrada en Output y no modifica el
+gameplay.
 
 ## Estructura
 
 ```text
 scenes/                 Escenas de Godot
 scripts/                Lógica de juego, NFC y receptor HTTP
-data/cards.json         Mapeo de UID legado a tarjeta interna
+data/items.json         Catálogo canónico: ID, nombre, tipo y descripción
+data/cards.json         Mapeo de UID físico a ID de items.json
 android_nfc_bridge/     Aplicación Android lectora/grabadora NDEF
 documents/readme.me     Documentación técnica extendida
 ```

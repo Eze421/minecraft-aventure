@@ -1,0 +1,17 @@
+{
+  "CARD_001": {
+    "name": "Madera",
+    "type": "wood",
+    "description": "Bloque de madera para construcciones y recetas."
+  },
+  "CARD_002": {
+    "name": "Piedra",
+    "type": "stone",
+    "description": "Bloque de piedra para construcciones resistentes."
+  },
+  "CARD_003": {
+    "name": "Hierro",
+    "type": "iron",
+    "description": "Material metálico para herramientas y mecanismos."
+  }
+}

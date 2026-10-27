@@ -10,7 +10,8 @@ signal item_requested(card: Dictionary)
 signal request_completed(card: Dictionary, reader_id: int)
 signal request_rejected(expected: Dictionary, received: Dictionary)
 
-const CARD_DATA_PATH := "res://data/cards.json"
+const CARDS_DATA_PATH := "res://data/cards.json"
+const ITEMS_DATA_PATH := "res://data/items.json"
 
 var _database := CardDatabase.new()
 var _requested_card: Dictionary = {}
@@ -21,7 +22,7 @@ var _requested_card: Dictionary = {}
 func _ready() -> void:
 	add_to_group("nfc_test_reader")
 	add_to_group("nfc_reader")
-	_database.load_from_file(CARD_DATA_PATH)
+	_database.load_from_files(CARDS_DATA_PATH, ITEMS_DATA_PATH)
 	nfc_events.card_detected.connect(_on_uid_received)
 	nfc_events.card_data_detected.connect(_on_card_data_received)
 	nfc_events.protocol_status.connect(func(message): print("[NFC] ", message))

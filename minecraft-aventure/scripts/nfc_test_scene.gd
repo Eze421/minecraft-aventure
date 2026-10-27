@@ -1,7 +1,7 @@
 extends Control
 
 @onready var reader: NfcTestReader = $NfcBackground
-@onready var requirement: NfcRequirement = $GameplayLayer/WoodRequirement
+@onready var requirement: NfcRequirement = $GameplayLayer/WoodStoneRequirement
 @onready var status: Label = %Status
 @onready var endpoint: Label = %Endpoint
 
@@ -14,5 +14,10 @@ func _ready() -> void:
 	requirement.completed.connect(func(): status.text = "✓ Requisito completado.")
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if event.is_pressed() and not event.is_echo() and event.keycode == KEY_1:
-		reader.nfc_events.simulate(1, "04A1B2C3D4")
+	if not event.is_pressed() or event.is_echo():
+		return
+	match event.keycode:
+		KEY_1, KEY_KP_1:
+			reader.nfc_events.simulate(1, "A22C711A") # Madera
+		KEY_2, KEY_KP_2:
+			reader.nfc_events.simulate(2, "62C4FB1B") # Piedra

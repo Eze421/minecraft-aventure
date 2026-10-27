@@ -2,34 +2,47 @@ class_name CardDatabase
 extends RefCounted
 
 var _cards_by_uid: Dictionary = {}
+var _items_by_id: Dictionary = {}
 
-func load_from_file(path: String) -> Error:
-	var file := FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		return FileAccess.get_open_error()
-	var parsed = JSON.parse_string(file.get_as_text())
-	if not parsed is Dictionary:
-		return ERR_PARSE_ERROR
-	_cards_by_uid = parsed
+func load_from_files(cards_path: String, items_path: String) -> Error:
+	var cards := _read_dictionary(cards_path)
+	if cards.is_empty():
+		return ERR_FILE_NOT_FOUND
+	var items := _read_dictionary(items_path)
+	if items.is_empty():
+		return ERR_FILE_NOT_FOUND
+	_cards_by_uid = cards
+	_items_by_id = items
 	return OK
 
 func find_by_uid(uid: String) -> Dictionary:
-	return _cards_by_uid.get(uid.strip_edges().to_upper(), {})
+	var item_id := str(_cards_by_uid.get(uid.strip_edges().to_upper(), ""))
+	return find_by_id(item_id)
 
 func find_by_id(card_id: String) -> Dictionary:
-	for card in _cards_by_uid.values():
-		if card.get("id") == card_id:
-			return card
-	return {}
+	var item: Dictionary = _items_by_id.get(card_id, {})
+	if item.is_empty():
+		return {}
+	var card := item.duplicate()
+	card["id"] = card_id
+	return card
 
 ## Permite que el gameplay pida una tarjeta con su ID, nombre o tipo.
 ## Ejemplos: CARD_001, Madera o wood.
 func find(reference: String) -> Dictionary:
 	var normalized := reference.strip_edges().to_lower()
-	for card in _cards_by_uid.values():
+	for item_id in _items_by_id:
+		var card := find_by_id(item_id)
 		var matches_id := str(card.get("id", "")).to_lower() == normalized
 		var matches_name := str(card.get("name", "")).to_lower() == normalized
 		var matches_type := str(card.get("type", "")).to_lower() == normalized
 		if matches_id or matches_name or matches_type:
 			return card
 	return {}
+
+func _read_dictionary(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
