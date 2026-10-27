@@ -44,9 +44,12 @@ Tarjeta NFC → lector → Arduino → USB/Serial → NfcEventSource → GameCon
 
 El firmware está en [`../arduino/codigo_lectura/codigo_lectura.ino`](../arduino/codigo_lectura/codigo_lectura.ino).
 Usa la biblioteca **MFRC522** de Miguel Balboa y transmite cada UID por USB a
-115200 baudios con el formato `READER=1;UID=...`. El RC522 se conecta a un
-Arduino Mega 2560 por SPI: `SDA→D53`, `SCK→D52`, `MOSI→D51`, `MISO→D50`,
-`RST→D5`, `3.3V→3.3V` y `GND→GND`. **No lo conectes a 5V.**
+115200 baudios con el formato `READER=1;UID=...` hasta `READER=9;UID=...`.
+Los RC522 comparten SPI del Arduino Mega 2560: `SCK→D52`, `MOSI→D51`,
+`MISO→D50`, `3.3V→3.3V` y `GND→GND`. Los pares `SDA/RST` reservados son:
+L1 `53/5`, L2 `49/6`, L3 `47/7`, L4 `45/8`, L5 `43/9`, L6 `41/10`, L7
+`39/11`, L8 `37/12` y L9 `35/13`. Al conectar uno nuevo, incrementá
+`ACTIVE_READER_COUNT` en el sketch. **No los conectes a 5V.**
 
 Para que Godot reciba ese puerto USB sin instalar un complemento serial, con
 Godot abierto ejecutá en la PC:

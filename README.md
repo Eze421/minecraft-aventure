@@ -12,8 +12,12 @@ Monorepo de la experiencia NFC 2D.
 
 El firmware histórico está recuperado en
 [`arduino/codigo_lectura/codigo_lectura.ino`](arduino/codigo_lectura/codigo_lectura.ino).
-Usa un Arduino Mega 2560 con RC522 y emite eventos `READER=1;UID=...` a 115200
-baudios. Para reenviar esos eventos por USB al receptor local de Godot, usar
+Usa un Arduino Mega 2560 con hasta nueve RC522 y emite eventos
+`READER=1;UID=...` hasta `READER=9;UID=...` a 115200 baudios. Todos comparten
+SPI del Mega (`SCK=52`, `MOSI=51`, `MISO=50`). El firmware deja preparados
+`SDA/RST`: L1 `53/5`, L2 `49/6`, L3 `47/7`, L4 `45/8`, L5 `43/9`, L6 `41/10`,
+L7 `39/11`, L8 `37/12`, L9 `35/13`. Para activar más lectores se incrementa
+`ACTIVE_READER_COUNT` en el sketch. Para reenviar esos eventos por USB al receptor local de Godot, usar
 [`arduino/serial_nfc_bridge.py`](arduino/serial_nfc_bridge.py).
 
 El puente se ejecuta una sola vez y queda escuchando el puerto continuamente.
