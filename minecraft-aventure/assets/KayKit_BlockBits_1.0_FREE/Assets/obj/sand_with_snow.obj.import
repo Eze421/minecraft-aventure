@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://ccjsbw0bmxwau"
+path="res://.godot/imported/sand_with_snow.obj-ea901cdc161978e22f506960d8df3e7e.mesh"
+
+[deps]
+
+files=["res://.godot/imported/sand_with_snow.obj-ea901cdc161978e22f506960d8df3e7e.mesh"]
+
+source_file="res://assets/KayKit_BlockBits_1.0_FREE/Assets/obj/sand_with_snow.obj"
+dest_files=["res://.godot/imported/sand_with_snow.obj-ea901cdc161978e22f506960d8df3e7e.mesh", "res://.godot/imported/sand_with_snow.obj-ea901cdc161978e22f506960d8df3e7e.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

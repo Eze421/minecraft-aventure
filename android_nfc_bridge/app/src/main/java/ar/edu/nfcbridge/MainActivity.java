@@ -21,22 +21,21 @@ import android.widget.TextView;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /** Lector y grabador NDEF de texto para enviar tarjetas a Godot por Wi-Fi. */
 public class MainActivity extends android.app.Activity {
     private static final String DEFAULT_ENDPOINT = "http://192.168.100.48:8080/nfc";
-    private static final CardPreset[] CARD_PRESETS = {
-            new CardPreset("Madera", "CARD_001", "Madera", "wood"),
-            new CardPreset("Piedra", "CARD_002", "Piedra", "stone"),
-            new CardPreset("Hierro", "CARD_003", "Hierro", "iron")
-    };
     private NfcAdapter nfcAdapter;
     private EditText endpointInput;
     private EditText cardIdInput;
@@ -51,6 +50,7 @@ public class MainActivity extends android.app.Activity {
     private String lastTagSignature = "";
     private long lastReadAt = 0;
     private final ExecutorService network = Executors.newSingleThreadExecutor();
+    private final List<CardPreset> cardPresets = new ArrayList<>();
 
     private enum Mode { NONE, READ_ONCE, CONTINUOUS, WRITE }
 
@@ -59,12 +59,14 @@ public class MainActivity extends android.app.Activity {
         final String id;
         final String name;
         final String type;
+        final String description;
 
-        CardPreset(String label, String id, String name, String type) {
+        CardPreset(String label, String id, String name, String type, String description) {
             this.label = label;
             this.id = id;
             this.name = name;
             this.type = type;
+            this.description = description;
         }
 
         @Override public String toString() { return label + " · " + id; }
@@ -72,6 +74,7 @@ public class MainActivity extends android.app.Activity {
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadCardPresets();
         buildInterface();
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) showStatus("Este teléfono no dispone de NFC.");
@@ -134,12 +137,12 @@ public class MainActivity extends android.app.Activity {
         layout.addView(chooserHint);
         Spinner presetSelector = new Spinner(this);
         ArrayAdapter<CardPreset> presetAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, CARD_PRESETS);
+                android.R.layout.simple_spinner_item, cardPresets);
         presetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         presetSelector.setAdapter(presetAdapter);
         presetSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                applyPreset(CARD_PRESETS[position]);
+                applyPreset(cardPresets.get(position));
             }
             @Override public void onNothingSelected(AdapterView<?> parent) { }
         });
@@ -178,6 +181,31 @@ public class MainActivity extends android.app.Activity {
         cardIdInput.setText(preset.id);
         cardNameInput.setText(preset.name);
         cardTypeInput.setText(preset.type);
+    }
+
+    /** Carga el catálogo empaquetado junto con la app para el grabado rápido. */
+    private void loadCardPresets() {
+        try (InputStream stream = getAssets().open("items.json");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+            StringBuilder json = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) json.append(line);
+            JSONObject catalog = new JSONObject(json.toString());
+            Iterator<String> ids = catalog.keys();
+            while (ids.hasNext()) {
+                String id = ids.next();
+                JSONObject item = catalog.getJSONObject(id);
+                String name = item.getString("name");
+                String type = item.getString("type");
+                cardPresets.add(new CardPreset(name, id, name, type,
+                        item.optString("description", "")));
+            }
+        } catch (Exception ignored) {
+            // La copia de respaldo mantiene funcional el grabado si un APK quedó mal empaquetado.
+            cardPresets.add(new CardPreset("Madera", "CARD_001", "Madera", "wood", ""));
+            cardPresets.add(new CardPreset("Piedra", "CARD_002", "Piedra", "stone", ""));
+            cardPresets.add(new CardPreset("Hierro", "CARD_003", "Hierro", "iron", ""));
+        }
     }
 
     @Override public void onPause() {

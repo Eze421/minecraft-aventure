@@ -1,0 +1,1085 @@
+[gd_scene format=4 uid="uid://uwrk88eiabxc"]
+
+[ext_resource type="Script" uid="uid://c8uejm8ygoire" path="res://scripts/player/player.gd" id="1_3vyb7"]
+[ext_resource type="Texture2D" uid="uid://bgdytl3qj1y85" path="res://assets/steve/steve_steve_0.png" id="2_g2els"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qhqgy"]
+size = Vector3(1.2, 2, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l7m8e"]
+resource_name = "Material_0"
+transparency = 2
+alpha_scissor_threshold = 0.05
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_texture = ExtResource("2_g2els")
+texture_filter = 2
+texture_repeat = false
+metadata/_gltf_primary_texture_coord = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_3vcde"]
+_surfaces = [{
+"aabb": AABB(-0.25, 0.75, -0.125, 0.5, 0.75, 0.25),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAwAAAAIAAgABAAQABQAAAAMABQABAAAAAwACAAYABgAFAAMABgACAAQABwABAAUABwAFAAYAAQAHAAQABAAHAAYA"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("////////AAD/////AAAAAP//AAD//wAAAAAAAP//AAD//wAAAAAAAAAA/////wAAAAAAAAAAAAAAAP//AAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ykxc0"]
+resource_name = "steve_Mesh_0"
+_surfaces = [{
+"aabb": AABB(-0.25, 0.75, -0.125, 0.5, 0.75, 0.25),
+"attribute_data": PackedByteArray("D0DfX+9P318PQB8A708fAA9w31/vf99fD3AfAO9/HwDvbx9gD1AfYO9v338PUN9/74/ffw9w33/vjx9gD3AfYA+A31/vn99fD4AfAO+fHwAPUN9f72/fXw9QHwDvbx8A"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgABAAMABAAFAAYABgAFAAcACAAJAAoACgAJAAsADAANAA4ADgANAA8AEAARABIAEgARABMAFAAVABYAFgAVABcA"),
+"material": SubResource("StandardMaterial3D_l7m8e"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("/////////z//////AAD/P///AAD///8///8AAAAA/z8AAP//AAD/PwAA//////8/AAAAAAAA/z8AAAAA////PwAA//8AAAAA/////wAAAAAAAP////8AAP///////wAAAAAAAP///////wAA/////wAAAAAAAP////8AAAAA//8AAP/////+f/////////5/AAAAAP///n///wAA///+f/////8AAAAAAAD//wAAAAD//wAAAAAAAAAAAAAAAAAA/38AAP9/AAD/fwAA/38AAP9/////f////3////9/////f/+//3//v/9//7//f/+//3//P/9//z//f/8//3//P/9/////f////3////9/////f////3////9/////f///")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_3vcde")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_rnub5"]
+_surfaces = [{
+"aabb": AABB(-0.28125, 1.46875, -0.28125, 0.5625, 0.5625, 0.5625),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAwAAAAIAAgABAAQABQAAAAMABQABAAAAAwACAAYABgAFAAMABgACAAQABwABAAUABwAFAAYAAQAHAAQABAAHAAYA"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("////////AAD/////AAAAAP//AAD//wAAAAAAAP//AAD//wAAAAAAAAAA/////wAAAAAAAAAAAAAAAP//AAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_urj85"]
+resource_name = "steve_Mesh_2"
+_surfaces = [{
+"aabb": AABB(-0.28125, 1.46875, -0.28125, 0.5625, 0.5625, 0.5625),
+"attribute_data": PackedByteArray("D4Dfv++f378PgB+A758fgA/A37/v39+/D8AfgO/fH4Dvvx/AD6AfwO+/3/8PoN//79/f/w/A3//v3x/AD8AfwA/g37/v/9+/D+AfgO//H4APoN+/77/fvw+gH4Dvvx+A"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgABAAMABAAFAAYABgAFAAcACAAJAAoACgAJAAsADAANAA4ADgANAA8AEAARABIAEgARABMAFAAVABYAFgAVABcA"),
+"material": SubResource("StandardMaterial3D_l7m8e"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("/////////z//////AAD/P///AAD///8///8AAAAA/z8AAP//AAD/PwAA//////8/AAAAAAAA/z8AAAAA////PwAA//8AAAAA/////wAAAAAAAP////8AAP///////wAAAAAAAP///////wAA/////wAAAAAAAP////8AAAAA//8AAP/////+f/////////5/AAAAAP///n///wAA///+f/////8AAAAAAAD//wAAAAD//wAAAAAAAAAAAAAAAAAA/38AAP9/AAD/fwAA/38AAP9/////f////3////9/////f/+//3//v/9//7//f/+//3//P/9//z//f/8//3//P/9/////f////3////9/////f////3////9/////f///")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_rnub5")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ju3l2"]
+_surfaces = [{
+"aabb": AABB(-0.25, 1.5, -0.25, 0.5, 0.5, 0.5),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAwAAAAIAAgABAAQABQAAAAMABQABAAAAAwACAAYABgAFAAMABgACAAQABwABAAUABwAFAAYAAQAHAAQABAAHAAYA"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("////////AAD/////AAAAAP//AAD//wAAAAAAAP//AAD//wAAAAAAAAAA/////wAAAAAAAAAAAAAAAP//AAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_cih4s"]
+resource_name = "steve_Mesh_1"
+_surfaces = [{
+"aabb": AABB(-0.25, 1.5, -0.25, 0.5, 0.5, 0.5),
+"attribute_data": PackedByteArray("DwDfv+8f378PAB+A7x8fgA9A37/vX9+/D0AfgO9fH4DvPx/ADyAfwO8/3/8PIN//71/f/w9A3//vXx/AD0AfwA9g37/vf9+/D2AfgO9/H4APIN+/7z/fvw8gH4DvPx+A"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgABAAMABAAFAAYABgAFAAcACAAJAAoACgAJAAsADAANAA4ADgANAA8AEAARABIAEgARABMAFAAVABYAFgAVABcA"),
+"material": SubResource("StandardMaterial3D_l7m8e"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("/////////z//////AAD/P///AAD///8///8AAAAA/z8AAP//AAD/PwAA//////8/AAAAAAAA/z8AAAAA////PwAA//8AAAAA/////wAAAAAAAP////8AAP///////wAAAAAAAP///////wAA/////wAAAAAAAP////8AAAAA//8AAP/////+f/////////5/AAAAAP///n///wAA///+f/////8AAAAAAAD//wAAAAD//wAAAAAAAAAAAAAAAAAA/38AAP9/AAD/fwAA/38AAP9/////f////3////9/////f/+//3//v/9//7//f/+//3//P/9//z//f/8//3//P/9/////f////3////9/////f////3////9/////f///")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_ju3l2")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_os6pl"]
+_surfaces = [{
+"aabb": AABB(-0.5, 0.75, -0.125, 0.25, 0.75, 0.25),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAwAAAAIAAgABAAQABQAAAAMABQABAAAAAwACAAYABgAFAAMABgACAAQABwABAAUABwAFAAYAAQAHAAQABAAHAAYA"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("////////AAD/////AAAAAP//AAD//wAAAAAAAP//AAD//wAAAAAAAAAA/////wAAAAAAAAAAAAAAAP//AAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_2fawc"]
+resource_name = "steve_Mesh_4"
+_surfaces = [{
+"aabb": AABB(-0.5, 0.75, -0.125, 0.25, 0.75, 0.25),
+"attribute_data": PackedByteArray("78/fXw/A31/vzx8AD8AfAO+v318PoN9f768fAA+gHwAPsB9g778fYA+w33/vv99/D8Dff+/P338PwB9g788fYO/f318P0N9f798fAA/QHwDvv99fD7DfX++/HwAPsB8A"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgABAAMABAAFAAYABgAFAAcACAAJAAoACgAJAAsADAANAA4ADgANAA8AEAARABIAEgARABMAFAAVABYAFgAVABcA"),
+"material": SubResource("StandardMaterial3D_l7m8e"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("////////////////AAD/////AAD///////8AAAAA//8AAP//AAD//wAA////////AAAAAAAA//8AAAAA/////wAA//8AAP+//////wAA/78AAP//////v/////////+/AAAAAP///z///wAA////PwAAAAAAAP8///8AAAAA/z8AAP//////////////////AAAAAP///////wAA//////////8AAP//AAD//wAA/////wAAAAD//wAAAAAAAP///7//f/+//3//v/9//7//f/8//3//P/9//z//f/8//3////9/////f////3////9/AAD/fwAA/38AAP9/AAD/f/9//3//f/9//3//f/9//3////9/////f////3////9/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_os6pl")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_qvlbq"]
+_surfaces = [{
+"aabb": AABB(-0.24375, 0, -0.125, 0.25, 0.75, 0.25),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAwAAAAIAAgABAAQABQAAAAMABQABAAAAAwACAAYABgAFAAMABgACAAQABwABAAUABwAFAAYAAQAHAAQABAAHAAYA"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("////////AAD/////AAAAAP//AAD//wAAAAAAAP//AAD//wAAAAAAAAAA/////wAAAAAAAAAAAAAAAP//AAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_u15mf"]
+resource_name = "steve_Mesh_6"
+_surfaces = [{
+"aabb": AABB(-0.24375, 0, -0.125, 0.25, 0.75, 0.25),
+"attribute_data": PackedByteArray("7y/fXw8g31/vLx8ADyAfAO8P318PAN9f7w8fAA8AHwAPEB9g7x8fYA8Q33/vH99/DyDff+8v338PIB9g7y8fYO8/318PMN9f7z8fAA8wHwDvH99fDxDfX+8fHwAPEB8A"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgABAAMABAAFAAYABgAFAAcACAAJAAoACgAJAAsADAANAA4ADgANAA8AEAARABIAEgARABMAFAAVABYAFgAVABcA"),
+"material": SubResource("StandardMaterial3D_l7m8e"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("////////////////AAD/////AAD///////8AAAAA//8AAP//AAD//wAA////////AAAAAAAA//8AAAAA/////wAA//8AAP+//////wAA/78AAP//////v/////////+/AAAAAP///z///wAA////PwAAAAAAAP8///8AAAAA/z8AAP//////////////////AAAAAP///////wAA//////////8AAP//AAD//wAA/////wAAAAD//wAAAAAAAP///7//f/+//3//v/9//7//f/8//3//P/9//z//f/8//3////9/////f////3////9/AAD/fwAA/38AAP9/AAD/f/9//3//f/9//3//f/9//3////9/////f////3////9/")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_qvlbq")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_cv8qu"]
+_surfaces = [{
+"aabb": AABB(0.25, 0.75, -0.125, 0.25, 0.75, 0.25),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAwAAAAIAAgABAAQABQAAAAMABQABAAAAAwACAAYABgAFAAMABgACAAQABwABAAUABwAFAAYAAQAHAAQABAAHAAYA"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("////////AAD/////AAAAAP//AAD//wAAAAAAAP//AAD//wAAAAAAAAAA/////wAAAAAAAAAAAAAAAP//AAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_b1kal"]
+resource_name = "steve_Mesh_3"
+_surfaces = [{
+"aabb": AABB(0.25, 0.75, -0.125, 0.25, 0.75, 0.25),
+"attribute_data": PackedByteArray("D6DfX++v318PoB8A768fAA/A31/vz99fD8AfAO/PHwDvvx9gD7AfYO+/338PsN9/78/ffw/A33/vzx9gD8AfYA/Q31/v399fD9AfAO/fHwAPsN9f77/fXw+wHwDvvx8A"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgABAAMABAAFAAYABgAFAAcACAAJAAoACgAJAAsADAANAA4ADgANAA8AEAARABIAEgARABMAFAAVABYAFgAVABcA"),
+"material": SubResource("StandardMaterial3D_l7m8e"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("/////////z//////AAD/P///AAD///8///8AAAAA/z8AAP//AAD/PwAA//////8/AAAAAAAA/z8AAAAA////PwAA//8AAAAA/////wAAAAAAAP////8AAP///////wAAAAAAAP///////wAA/////wAAAAAAAP////8AAAAA//8AAP/////+f/////////5/AAAAAP///n///wAA///+f/////8AAAAAAAD//wAAAAD//wAAAAAAAAAAAAAAAAAA/38AAP9/AAD/fwAA/38AAP9/////f////3////9/////f/+//3//v/9//7//f/+//3//P/9//z//f/8//3//P/9/////f////3////9/////f////3////9/////f///")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_cv8qu")
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_tg3me"]
+_surfaces = [{
+"aabb": AABB(-0.00625, 0, -0.125, 0.25, 0.75, 0.25),
+"format": 34896613377,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAwAAAAIAAgABAAQABQAAAAMABQABAAAAAwACAAYABgAFAAMABgACAAQABwABAAUABwAFAAYAAQAHAAQABAAHAAYA"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("////////AAD/////AAAAAP//AAD//wAAAAAAAP//AAD//wAAAAAAAAAA/////wAAAAAAAAAAAAAAAP//AAAAAA==")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_gnysi"]
+resource_name = "steve_Mesh_5"
+_surfaces = [{
+"aabb": AABB(-0.00625, 0, -0.125, 0.25, 0.75, 0.25),
+"attribute_data": PackedByteArray("DwDfX+8P318PAB8A7w8fAA8g31/vL99fDyAfAO8vHwDvHx9gDxAfYO8f338PEN9/7y/ffw8g33/vLx9gDyAfYA8w31/vP99fDzAfAO8/HwAPEN9f7x/fXw8QHwDvHx8A"),
+"format": 34896613399,
+"index_count": 36,
+"index_data": PackedByteArray("AAABAAIAAgABAAMABAAFAAYABgAFAAcACAAJAAoACgAJAAsADAANAA4ADgANAA8AEAARABIAEgARABMAFAAVABYAFgAVABcA"),
+"material": SubResource("StandardMaterial3D_l7m8e"),
+"name": "Material_0",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("/////////z//////AAD/P///AAD///8///8AAAAA/z8AAP//AAD/PwAA//////8/AAAAAAAA/z8AAAAA////PwAA//8AAAAA/////wAAAAAAAP////8AAP///////wAAAAAAAP///////wAA/////wAAAAAAAP////8AAAAA//8AAP/////+f/////////5/AAAAAP///n///wAA///+f/////8AAAAAAAD//wAAAAD//wAAAAAAAAAAAAAAAAAA/38AAP9/AAD/fwAA/38AAP9/////f////3////9/////f/+//3//v/9//7//f/+//3//P/9//z//f/8//3//P/9/////f////3////9/////f////3////9/////f///")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_tg3me")
+
+[sub_resource type="Animation" id="Animation_8vvro"]
+resource_name = "animation_juhih_attack_bare_hand"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_qo8mu"]
+resource_name = "animation_juhih_attack_bare_hand_001"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_ljiv1"]
+resource_name = "animation_juhih_attack_bare_hand_002"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_ld7qv"]
+resource_name = "animation_juhih_attack_bare_hand_003"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_fvmef"]
+resource_name = "animation_juhih_attack_bare_hand_004"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_g14n6"]
+resource_name = "animation_juhih_attack_bare_hand_005"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_xkaw6"]
+resource_name = "animation_juhih_attack_bare_hand_006"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_mqw5o"]
+resource_name = "animation_juhih_attack_bare_hand_007"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_71jtm"]
+resource_name = "animation_juhih_attack_bare_hand_008"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_uvyn0"]
+resource_name = "animation_juhih_attack_bare_hand_009"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_guqui"]
+resource_name = "animation_juhih_attack_bare_hand_010"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_sh3xu"]
+resource_name = "animation_juhih_attack_bare_hand_011"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_me7r2"]
+resource_name = "animation_juhih_attack_bare_hand_012"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_qitoc"]
+resource_name = "animation_juhih_attack_bare_hand_013"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_6mhht"]
+resource_name = "animation_juhih_attack_bare_hand_014"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_5pyjr"]
+resource_name = "animation_juhih_attack_bare_hand_015"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_up700"]
+resource_name = "animation_juhih_attack_bare_hand_016"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_rapas"]
+resource_name = "animation_juhih_attack_bare_hand_017"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_au6by"]
+resource_name = "animation_juhih_attack_bare_hand_018"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_qwu2m"]
+resource_name = "animation_juhih_attack_bare_hand_019"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0.70357376, -0.07059809, -5.2683564e-09, 0.7071067)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0.70357376, 0.07059809, 5.2683564e-09, 0.7071067)
+
+[sub_resource type="Animation" id="Animation_j7u6l"]
+resource_name = "animation_juhih_swimming"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_m4exl"]
+resource_name = "animation_juhih_swimming_001"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_8sqgb"]
+resource_name = "animation_juhih_swimming_002"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_1148v"]
+resource_name = "animation_juhih_swimming_003"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_s1h6k"]
+resource_name = "animation_juhih_swimming_004"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_xvbsd"]
+resource_name = "animation_juhih_swimming_005"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_ubwuw"]
+resource_name = "animation_juhih_swimming_006"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_vj3jd"]
+resource_name = "animation_juhih_swimming_007"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_nnccs"]
+resource_name = "animation_juhih_swimming_008"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_uy5hl"]
+resource_name = "animation_juhih_swimming_009"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_mp26c"]
+resource_name = "animation_juhih_swimming_010"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_m5fke"]
+resource_name = "animation_juhih_swimming_011"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_nvs6r"]
+resource_name = "animation_juhih_swimming_012"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_s0fpm"]
+resource_name = "animation_juhih_swimming_013"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_grjhh"]
+resource_name = "animation_juhih_swimming_014"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_wjoll"]
+resource_name = "animation_juhih_swimming_015"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_7vek1"]
+resource_name = "animation_juhih_swimming_016"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_3myx2"]
+resource_name = "animation_juhih_swimming_017"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_0il3u"]
+resource_name = "animation_juhih_swimming_018"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_fbh57"]
+resource_name = "animation_juhih_swimming_019"
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = true
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node_17/waist/body/leftArm")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Node_17/waist/body/rightArm")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b66i6"]
+_data = {
+&"animation_juhih_attack_bare_hand": SubResource("Animation_8vvro"),
+&"animation_juhih_attack_bare_hand_001": SubResource("Animation_qo8mu"),
+&"animation_juhih_attack_bare_hand_002": SubResource("Animation_ljiv1"),
+&"animation_juhih_attack_bare_hand_003": SubResource("Animation_ld7qv"),
+&"animation_juhih_attack_bare_hand_004": SubResource("Animation_fvmef"),
+&"animation_juhih_attack_bare_hand_005": SubResource("Animation_g14n6"),
+&"animation_juhih_attack_bare_hand_006": SubResource("Animation_xkaw6"),
+&"animation_juhih_attack_bare_hand_007": SubResource("Animation_mqw5o"),
+&"animation_juhih_attack_bare_hand_008": SubResource("Animation_71jtm"),
+&"animation_juhih_attack_bare_hand_009": SubResource("Animation_uvyn0"),
+&"animation_juhih_attack_bare_hand_010": SubResource("Animation_guqui"),
+&"animation_juhih_attack_bare_hand_011": SubResource("Animation_sh3xu"),
+&"animation_juhih_attack_bare_hand_012": SubResource("Animation_me7r2"),
+&"animation_juhih_attack_bare_hand_013": SubResource("Animation_qitoc"),
+&"animation_juhih_attack_bare_hand_014": SubResource("Animation_6mhht"),
+&"animation_juhih_attack_bare_hand_015": SubResource("Animation_5pyjr"),
+&"animation_juhih_attack_bare_hand_016": SubResource("Animation_up700"),
+&"animation_juhih_attack_bare_hand_017": SubResource("Animation_rapas"),
+&"animation_juhih_attack_bare_hand_018": SubResource("Animation_au6by"),
+&"animation_juhih_attack_bare_hand_019": SubResource("Animation_qwu2m"),
+&"animation_juhih_swimming": SubResource("Animation_j7u6l"),
+&"animation_juhih_swimming_001": SubResource("Animation_m4exl"),
+&"animation_juhih_swimming_002": SubResource("Animation_8sqgb"),
+&"animation_juhih_swimming_003": SubResource("Animation_1148v"),
+&"animation_juhih_swimming_004": SubResource("Animation_s1h6k"),
+&"animation_juhih_swimming_005": SubResource("Animation_xvbsd"),
+&"animation_juhih_swimming_006": SubResource("Animation_ubwuw"),
+&"animation_juhih_swimming_007": SubResource("Animation_vj3jd"),
+&"animation_juhih_swimming_008": SubResource("Animation_nnccs"),
+&"animation_juhih_swimming_009": SubResource("Animation_uy5hl"),
+&"animation_juhih_swimming_010": SubResource("Animation_mp26c"),
+&"animation_juhih_swimming_011": SubResource("Animation_m5fke"),
+&"animation_juhih_swimming_012": SubResource("Animation_nvs6r"),
+&"animation_juhih_swimming_013": SubResource("Animation_s0fpm"),
+&"animation_juhih_swimming_014": SubResource("Animation_grjhh"),
+&"animation_juhih_swimming_015": SubResource("Animation_wjoll"),
+&"animation_juhih_swimming_016": SubResource("Animation_7vek1"),
+&"animation_juhih_swimming_017": SubResource("Animation_3myx2"),
+&"animation_juhih_swimming_018": SubResource("Animation_0il3u"),
+&"animation_juhih_swimming_019": SubResource("Animation_fbh57")
+}
+
+[node name="Player" type="CharacterBody3D" unique_id=1438490901 groups=["player"]]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+script = ExtResource("1_3vyb7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2043166775]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.99558103, -0.0043945014)
+shape = SubResource("BoxShape3D_qhqgy")
+
+[node name="steve" type="Node3D" parent="." unique_id=1443034920]
+
+[node name="Node_17" type="Node3D" parent="steve" unique_id=1622984]
+
+[node name="waist" type="Node3D" parent="steve/Node_17" unique_id=1204021823]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="body" type="Node3D" parent="steve/Node_17/waist" unique_id=1850804618]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+
+[node name="body_001" type="MeshInstance3D" parent="steve/Node_17/waist/body" unique_id=931270147]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+mesh = SubResource("ArrayMesh_ykxc0")
+
+[node name="head" type="Node3D" parent="steve/Node_17/waist/body" unique_id=937472760]
+metadata/_edit_group_ = true
+
+[node name="hat" type="Node3D" parent="steve/Node_17/waist/body/head" unique_id=920382327]
+
+[node name="hat_001" type="MeshInstance3D" parent="steve/Node_17/waist/body/head/hat" unique_id=1069236599]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+mesh = SubResource("ArrayMesh_urj85")
+
+[node name="head_001" type="MeshInstance3D" parent="steve/Node_17/waist/body/head" unique_id=782858865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.5, 0)
+mesh = SubResource("ArrayMesh_cih4s")
+
+[node name="leftArm" type="Node3D" parent="steve/Node_17/waist/body" unique_id=871637941]
+transform = Transform3D(0.9900319, -0.099341825, -0.099840395, -0.099341564, 0.009967891, -0.99500346, 0.09984066, 0.99500346, -2.4240222e-07, -0.3125, -0.125, 0)
+metadata/_edit_group_ = true
+
+[node name="leftArm_001" type="MeshInstance3D" parent="steve/Node_17/waist/body/leftArm" unique_id=2009511787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3125, -1.375, 0)
+mesh = SubResource("ArrayMesh_2fawc")
+
+[node name="leftItem" type="Node3D" parent="steve/Node_17/waist/body/leftArm" unique_id=551942105]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.062499985, -0.43749997, 0.062499877)
+
+[node name="leftLeg" type="Node3D" parent="steve/Node_17/waist/body" unique_id=680398469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11875, -0.75, 0)
+metadata/_edit_group_ = true
+
+[node name="leftLeg_001" type="MeshInstance3D" parent="steve/Node_17/waist/body/leftLeg" unique_id=472573597]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11875, -0.75, 0)
+mesh = SubResource("ArrayMesh_u15mf")
+
+[node name="rightArm" type="Node3D" parent="steve/Node_17/waist/body" unique_id=1113832025]
+transform = Transform3D(0.9900319, 0.099341825, 0.099840395, 0.099341564, 0.009967891, -0.99500346, -0.09984066, 0.99500346, -2.4240222e-07, 0.3125, -0.125, 0)
+metadata/_edit_group_ = true
+
+[node name="rightArm_001" type="MeshInstance3D" parent="steve/Node_17/waist/body/rightArm" unique_id=555213885]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3125, -1.375, 0)
+mesh = SubResource("ArrayMesh_b1kal")
+
+[node name="rightItem" type="Node3D" parent="steve/Node_17/waist/body/rightArm" unique_id=201580201]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.062499985, -0.43749997, 0.062499877)
+
+[node name="rightLeg" type="Node3D" parent="steve/Node_17/waist/body" unique_id=569838120]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11875, -0.75, 0)
+metadata/_edit_group_ = true
+
+[node name="rightLeg_001" type="MeshInstance3D" parent="steve/Node_17/waist/body/rightLeg" unique_id=1609740827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.11875, -0.75, 0)
+mesh = SubResource("ArrayMesh_gnysi")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="steve" unique_id=1893766185]
+libraries/ = SubResource("AnimationLibrary_b66i6")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2125330118]
+transform = Transform3D(0.5, 0, 0, 0, 0.4803298, 0.13886425, 0, -0.13886425, 0.4803298, 0, 1.9130554, 1.9240112)

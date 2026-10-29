@@ -13,5 +13,35 @@
 	"name": "Hierro",
 	"type": "iron",
 	"description": "Material metálico para herramientas y mecanismos."
+  },
+  "CARD_004": {
+	"name": "Diamante",
+	"type": "diamond",
+	"description": "Gema valiosa para equipo y herramientas avanzadas."
+  },
+  "CARD_005": {
+	"name": "Palos",
+	"type": "sticks",
+	"description": "Material básico para fabricar herramientas."
+  },
+  "CARD_006": {
+	"name": "Carbón",
+	"type": "coal",
+	"description": "Combustible para hornos y antorchas."
+  },
+  "CARD_007": {
+	"name": "Lingote de oro",
+	"type": "gold_ingot",
+	"description": "Metal precioso para objetos especiales."
+  },
+  "CARD_008": {
+	"name": "Mesa de crafteo",
+	"type": "crafting_table",
+	"description": "Estación para combinar materiales y crear objetos."
+  },
+  "CARD_009": {
+	"name": "Pico de hierro",
+	"type": "iron_pickaxe",
+	"description": "Herramienta para extraer piedra y minerales."
   }
 }

@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://bsbxbfy33s6bo"]
+
+[ext_resource type="Script" uid="uid://dt1gim657lms" path="res://scripts/nfc/nfc_requirement_test_area.gd" id="1_area"]
+[ext_resource type="PackedScene" path="res://scenes/components/nfc_requirement.tscn" id="2_requirement"]
+[ext_resource type="Script" uid="uid://cbt063qas2g2d" path="res://scripts/nfc/nfc_test_player.gd" id="3_player"]
+
+[sub_resource type="StyleBoxFlat" id="AreaStyle"]
+bg_color = Color(0.55, 0.36, 0.08, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 0.8, 0.2, 1)
+
+[sub_resource type="RectangleShape2D" id="AreaShape"]
+size = Vector2(220, 160)
+
+[sub_resource type="RectangleShape2D" id="PlayerShape"]
+size = Vector2(28, 28)
+
+[node name="NfcRequirementTest" type="Node2D" unique_id=359125166]
+
+[node name="Background" type="ColorRect" parent="." unique_id=369435912]
+offset_right = 960.0
+offset_bottom = 540.0
+mouse_filter = 2
+color = Color(0.04, 0.08, 0.06, 1)
+
+[node name="RequirementArea" type="Area2D" parent="." unique_id=1787675964]
+position = Vector2(660, 290)
+script = ExtResource("1_area")
+
+[node name="Panel" type="Panel" parent="RequirementArea" unique_id=559826356]
+offset_left = -110.0
+offset_top = -80.0
+offset_right = 110.0
+offset_bottom = 80.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("AreaStyle")
+
+[node name="Label" type="Label" parent="RequirementArea" unique_id=1016895935]
+offset_left = -100.0
+offset_top = -25.0
+offset_right = 100.0
+offset_bottom = 25.0
+theme_override_colors/font_color = Color(1, 0.95, 0.72, 1)
+theme_override_font_sizes/font_size = 19
+text = "ÁREA NFC
+CARD_001 · Lector 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RequirementArea" unique_id=1241230281]
+shape = SubResource("AreaShape")
+
+[node name="NfcRequirement" parent="RequirementArea" unique_id=1253053218 instance=ExtResource("2_requirement")]
+"Requisito NFC/Ítem requerido" = "CARD_001"
+"Requisito NFC/Nombre del ítem" = "Madera"
+"Requisito NFC/Lector requerido" = 1
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=754153821]
+position = Vector2(180, 290)
+script = ExtResource("3_player")
+
+[node name="Visual" type="Polygon2D" parent="Player" unique_id=996805945]
+color = Color(0.2, 0.7, 1, 1)
+polygon = PackedVector2Array(-14, -14, 14, -14, 14, 14, -14, 14)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=390372996]
+shape = SubResource("PlayerShape")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=834762579]
+
+[node name="Title" type="Label" parent="CanvasLayer" unique_id=603923770]
+offset_left = 35.0
+offset_top = 32.0
+offset_right = 925.0
+offset_bottom = 70.0
+theme_override_colors/font_color = Color(0.85, 1, 0.8, 1)
+theme_override_font_sizes/font_size = 25
+text = "Prueba: NfcRequirement dentro de Area2D"
+horizontal_alignment = 1
+
+[node name="Hint" type="Label" parent="CanvasLayer" unique_id=1765291902]
+offset_left = 35.0
+offset_top = 82.0
+offset_right = 925.0
+offset_bottom = 107.0
+text = "Flechas: mover · El requisito se activa al entrar · HTTP recibe en puerto 8080"
+horizontal_alignment = 1
+
+[node name="Status" type="Label" parent="CanvasLayer" unique_id=798647834]
+offset_left = 35.0
+offset_top = 122.0
+offset_right = 925.0
+offset_bottom = 150.0
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+horizontal_alignment = 1
+
+[connection signal="body_entered" from="RequirementArea" to="RequirementArea" method="_on_body_entered"]
+[connection signal="body_exited" from="RequirementArea" to="RequirementArea" method="_on_body_exited"]

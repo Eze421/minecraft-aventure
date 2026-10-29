@@ -11,14 +11,22 @@ config_version=5
 [application]
 
 config/name="Minecraft aventure"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/nfc_requirement_test.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+NfcHttp="*res://scripts/nfc/nfc_http_service.gd"
 
 [display]
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[global_group]
+
+player=""
 
 [physics]
 

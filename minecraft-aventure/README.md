@@ -1,211 +1,60 @@
-# Minecraft Aventure — prototipo NFC 2D
+# Base NFC para Godot
 
-Experiencia 2D corta para exposición, inspirada en Minecraft. Las tarjetas NFC
-representan materiales y activan la lógica del juego en Godot.
+Proyecto mínimo para construir gameplay desde cero sobre una única entrada NFC.
 
-El proyecto está diseñado para que la lógica no dependa del origen de la
-lectura: durante el desarrollo se puede usar el simulador de teclado o la app
-Android; en la instalación final, Arduino y lectores NFC enviarán el mismo
-evento interno.
-
-## Estado actual
-
-- Escena 2D funcional con un puzzle de tres pasos.
-- Simulador de teclado: `1` Madera, `2` Piedra, `3` Hierro y `R` reinicia.
-- Control de orden de tarjetas y bloqueo de lecturas repetidas.
-- Base de datos de tarjetas con UID como compatibilidad para hardware futuro.
-- Receptor HTTP local para las lecturas de la app Android.
-- App Android compañera para leer, grabar y enviar tarjetas NDEF por Wi-Fi.
-
-El orden actual del puzzle es **Madera → Piedra → Hierro**.
-
-## Arquitectura
+## Flujo
 
 ```text
-Tarjeta NDEF de texto
-        │
-        ▼
-App Android Puente NFC → Godot
-        │  Wi-Fi / HTTP local
-        ▼
-Godot: HttpNfcReceiver
-        │
-        ▼
-NfcEventSource → GameController → interfaz 2D
+Arduino / app Android → HTTP GET /nfc?reader=2&d=<JSON> → NfcHttp → NfcRequirement
 ```
 
-La futura ruta física mantiene la misma capa de juego:
+`NfcHttp` es un autoload: inicia el servidor HTTP en el puerto `8080`, valida
+que cada lectura tenga `reader` mayor que cero y JSON con `v: 1` e `id`, y emite:
 
-```text
-Tarjeta NFC → lector → Arduino → USB/Serial → NfcEventSource → GameController
+```gdscript
+NfcHttp.item_received(item_id, reader_id, item)
 ```
 
-## Arduino + RC522 por USB
-
-El firmware está en [`../arduino/codigo_lectura/codigo_lectura.ino`](../arduino/codigo_lectura/codigo_lectura.ino).
-Usa la biblioteca **MFRC522** de Miguel Balboa y transmite cada UID por USB a
-115200 baudios con el formato `READER=1;UID=...` hasta `READER=9;UID=...`.
-Los RC522 comparten SPI del Arduino Mega 2560: `SCK→D52`, `MOSI→D51`,
-`MISO→D50`, `3.3V→3.3V` y `GND→GND`. Los pares `SDA/RST` reservados son:
-L1 `53/5`, L2 `49/6`, L3 `47/7`, L4 `45/8`, L5 `43/9`, L6 `41/10`, L7
-`39/11`, L8 `37/12` y L9 `35/13`. Al conectar uno nuevo, incrementá
-`ACTIVE_READER_COUNT` en el sketch. **No los conectes a 5V.**
-
-Para que Godot reciba ese puerto USB sin instalar un complemento serial, con
-Godot abierto ejecutá en la PC:
-
-```bash
-python3 -m pip install pyserial
-python3 ../arduino/serial_nfc_bridge.py --port /dev/ttyACM0
-```
-
-En Windows reemplazá `/dev/ttyACM0` por el puerto, por ejemplo `COM3`. El
-puente reenvía el NDEF físico a `http://127.0.0.1:8080/nfc`; el receptor lo
-entrega a la misma lógica usada por la app Android mediante el parámetro `d`.
-El UID solo se imprime para diagnóstico y no determina el objeto. Si el
-Arduino cambia de puerto, solo hay que ajustar ese parámetro.
-
-Cada tarjeta debe contener su propio JSON NDEF. Cambiar una tarjeta por otra
-no requiere registrar su UID: basta grabar el mismo `id`, `name` y `type`.
-
-## Requisitos
-
-### Juego
-
-- Godot 4.x.
-
-### Pruebas NFC por teléfono
-
-- Teléfono Android con NFC (probado con tarjetas NFC-A/NDEF como NTAG213 y
-  NTAG215).
-- PC y teléfono conectados a la misma red Wi-Fi.
-- Android Studio para instalar la app compañera.
-
-## Ejecutar el juego
-
-1. Abrí este directorio con Godot 4.
-2. Ejecutá el proyecto (`F6` o el botón Play).
-3. Probá el puzzle con `1`, `2`, `3` y `R`.
-4. Para usar NFC real, mantené Godot abierto: mostrará la dirección local del
-   receptor, por ejemplo `http://192.168.100.48:8080/nfc`.
-
-Si el sistema pregunta por el firewall, permití conexiones privadas para
-Godot. No expongas el puerto `8080` a Internet.
-
-## App Android: Puente NFC → Godot
-
-La app está en [`android_nfc_bridge`](android_nfc_bridge). Lee un registro NDEF
-de texto y lo transmite a Godot; por eso las tarjetas no guardan la IP de la
-PC ni URLs.
-
-1. Abrí `android_nfc_bridge` en Android Studio.
-2. Ejecutá la configuración `app` en el teléfono.
-3. Copiá en la app la dirección que muestra Godot y guardala.
-4. Usá **Lectura continua** para enviar tarjetas al juego.
-5. Usá **Grabado rápido** para seleccionar y escribir una tarjeta sin abrir
-   NFC Tools.
-
-La guía detallada está en [`android_nfc_bridge/README.md`](android_nfc_bridge/README.md).
-
-## Catálogo de ítems y UIDs
-
-`data/items.json` es el catálogo canónico: contiene la identidad estable y los
-datos de todos los ítems permitidos. Cada chip guarda esos mismos datos en su
-NDEF; su UID físico no se usa como identidad. La lista de grabado rápido
-Android usa los mismos ID, nombres y tipos.
-
-| Ítem | ID | Nombre | Tipo |
-| --- | --- | --- | --- |
-| Madera | `CARD_001` | `Madera` | `wood` |
-| Piedra | `CARD_002` | `Piedra` | `stone` |
-| Hierro | `CARD_003` | `Hierro` | `iron` |
-
-El JSON NDEF almacenado en cada tarjeta usa este formato:
+El formato recibido es:
 
 ```json
 {"v":1,"id":"CARD_001","name":"Madera","type":"wood"}
 ```
 
-`id` es la identidad estable de juego. El UID físico no es la identidad de la
-tarjeta: puede cambiarse un chip sin modificar la lógica, escribiendo los mismos
-datos NDEF en el reemplazo.
+## Componente de requisito
 
-## Pedir una tarjeta desde el gameplay
+Instanciá un `Node` en cualquier objeto de gameplay y adjuntale
+la escena [`scenes/components/nfc_requirement.tscn`](scenes/components/nfc_requirement.tscn).
+Su nodo raíz se llama **NfcRequirement**. En el Inspector configurá:
 
-El receptor NFC queda activo permanentemente en segundo plano. Una lectura no
-modifica el juego por sí sola: el gameplay debe pedir explícitamente el objeto
-que espera mediante `GameController.request_nfc(valor)`.
+- `Requisito NFC > Ítem requerido`: lista desplegable generada desde
+  `data/items.json` (`CARD_001`, `CARD_002`, etc.).
+- `Requisito NFC > Lector requerido`: lista desplegable con **Cualquier
+  lector** o **Lector 1** a **Lector 9**.
+- `one_shot`: desactiva el requisito después de acertar.
 
-```gdscript
-# Las tres llamadas son equivalentes con el catálogo actual.
-game.request_nfc("wood")
-game.request_nfc("Madera")
-game.request_nfc("CARD_001")
-```
-
-La función busca `tipo`, `nombre` o `ID` en el catálogo y devuelve `true` si
-existe. Solo la tarjeta solicitada completa la espera. Las lecturas ocurridas
-sin una solicitud activa se ignoran; las tarjetas equivocadas no avanzan el
-juego. Al aceptar una lectura se emite `nfc_request_completed(card, reader_id)`.
-
-## Componente reutilizable: NfcRequirement
-
-La escena [`scenes/components/nfc_requirement.tscn`](scenes/components/nfc_requirement.tscn)
-es un nodo reutilizable para cualquier puzzle. Instanciala dentro de la escena
-de gameplay y configurá en el Inspector:
-
-- `required_items`: lista de ID, nombres o tipos; por ejemplo `wood`,
-  `CARD_002` o `Madera`.
-- `required_reader_id`: `0` para cualquier lector o `1` a `9` para exigir una
-  posición física específica.
-- `start_on_ready`: inicia el requisito automáticamente, si corresponde.
-
-Cuando el gameplay deba comenzar la interacción, llamá:
+El componente tiene una función que devuelve el resultado:
 
 ```gdscript
-$NfcRequirement.start()
+if $NfcRequirement.accepts("CARD_001", 2):
+	print("true")
 ```
 
-Si hay varios ítems requeridos, deben leerse todos; cada lectura correcta emite
-`item_accepted` y al completar la lista se emite `completed`. Una tarjeta
-incorrecta o leída desde otro lector emite `rejected`.
+Y señales para usar en dinámica real:
 
-## Escena aislada de prueba NFC
-
-Abrí y ejecutá `scenes/nfc_test.tscn` para comprobar la arquitectura sin tocar
-la escena principal. La escena contiene dos capas:
-
-- `NfcBackground`: inicia el servidor HTTP, escucha constantemente y muestra
-  por `print()` cada UID o JSON NDEF que recibe en el panel **Output**.
-- `GameplayLayer`: contiene un jugador azul y un bloque dorado. Al entrar en
-  el `Area2D` del bloque, el gameplay llama `request_item("wood")`.
-
-Mové el jugador con las flechas. Una vez activada la zona, escaneá **Madera y
-Piedra**, en cualquier orden y desde cualquier lector, con la app Android o
-presioná `1` y `2` para simularlas desde los lectores 1 y 2. Una tarjeta leída
-antes de entrar en el área queda solo registrada en Output y no modifica el
-gameplay.
-
-## Estructura
-
-```text
-scenes/                 Escenas de Godot
-scripts/                Lógica de juego, NFC y receptor HTTP
-data/items.json         Catálogo canónico: ID, nombre, tipo y descripción
-android_nfc_bridge/     Aplicación Android lectora/grabadora NDEF
-documents/readme.me     Documentación técnica extendida
+```gdscript
+$NfcRequirement.completed.connect(func(item, reader_id):
+	# abrir puerta, fabricar objeto, avanzar misión, etc.
+	pass
+)
 ```
 
-## Próximos pasos
+El juego recibe cada lectura por HTTP independientemente de que haya o no un
+requisito activo. Cada objeto decide qué ID y qué lector acepta.
 
-1. Definir el diseño final del puzzle y sus estados.
-2. Probar lectura continua prolongada con las tarjetas físicas.
-3. Integrar Arduino y uno o más lectores NFC.
-4. Conectar el adaptador serie a `NfcEventSource.parse_serial_message()`.
-5. Preparar recuperación ante desconexión y pruebas de exposición.
+## Prueba incluida
 
-## Notas de desarrollo
-
-- La app Android debe permanecer en primer plano para el modo lector.
-- No bloquees tarjetas NFC durante las pruebas, así pueden reescribirse.
-- La documentación técnica detallada está en `documents/readme.me`.
+La escena inicial es `scenes/nfc_requirement_test.tscn`. Tiene un `Area2D` con
+un hijo **NfcRequirement** configurado para `CARD_001` en el lector `1`.
+Mové el jugador azul con las flechas: al entrar se activa y al salir se
+desactiva. Una lectura HTTP correcta actualiza el estado de la prueba.

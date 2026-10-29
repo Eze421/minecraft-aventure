@@ -14,8 +14,8 @@
  *
  * Instalá desde el Library Manager la biblioteca "MFRC522" de Miguel Balboa.
  * Para activar más lectores, aumentá ACTIVE_READER_COUNT hasta un máximo de 9.
- * Cada lectura NDEF se imprime como: READER=1;NDEF={"v":1,...}
- * El UID se muestra solo para diagnóstico: no identifica el objeto del juego.
+ * Cada lectura se imprime como: READER=1;UID=04A1B2C3D4
+ * El puente local serial_nfc_bridge.py traduce esos UID a JSON NDEF para Godot.
  */
 
 #include <SPI.h>
@@ -68,19 +68,8 @@ String readUid(MFRC522 &rfid) {
   return uid;
 }
 
-// Lee un registro NDEF de texto en NTAG213/215 (NFC-A Type 2). El contenido
-// debe ser el JSON de la tarjeta, por ejemplo {"v":1,"id":"CARD_001",...}.
-bool readNdefText(MFRC522 &rfid, String &text) {
-  const uint16_t maxBytes = 160; // Suficiente para el JSON actual en NTAG213.
-  byte data[maxBytes];
-  uint16_t count = 0;
-  for (byte page = 4; count < maxBytes; page += 4) {
-    byte buffer[18];
-    byte size = sizeof(buffer);
-    if (rfid.MIFARE_Read(page, buffer, &size) != MFRC522::STATUS_OK) return false;
-    for (byte index = 0; index < 16 && count < maxBytes; index++) data[count++] = buffer[index];
-  }
-
+// Extrae el primer registro NDEF de texto del área de datos ya leída.
+bool parseNdefText(const byte *data, uint16_t count, String &text) {
   uint16_t tlv = 0;
   while (tlv < count && data[tlv] == 0x00) tlv++;
   if (tlv >= count || data[tlv++] != 0x03) return false; // NDEF TLV
@@ -113,6 +102,65 @@ bool readNdefText(MFRC522 &rfid, String &text) {
   text = "";
   for (uint32_t index = 0; index < payloadLength; index++) text += char(data[tlv + index]);
   return text.startsWith("{") && text.endsWith("}");
+}
+
+// Lee NDEF de NTAG213/215 (NFC-A Type 2). MIFARE_Read devuelve 4 páginas
+// consecutivas (16 bytes) desde la página indicada.
+bool readType2NdefText(MFRC522 &rfid, String &text) {
+  const uint16_t maxBytes = 160;
+  byte data[maxBytes];
+  uint16_t count = 0;
+  for (byte page = 4; count < maxBytes; page += 4) {
+    byte buffer[18];
+    byte size = sizeof(buffer);
+    if (rfid.MIFARE_Read(page, buffer, &size) != MFRC522::STATUS_OK) return false;
+    for (byte index = 0; index < 16 && count < maxBytes; index++) data[count++] = buffer[index];
+  }
+  return parseNdefText(data, count, text);
+}
+
+// Lee MIFARE Classic 1K en formato NDEF. Android suele dejar la clave A por
+// defecto o la clave pública NFC Forum (D3 F7 D3 F7 D3 F7) en los sectores
+// NDEF. Solo se usan bloques de datos, nunca los trailers de sector.
+bool authenticateClassicSector(MFRC522 &rfid, byte trailerBlock) {
+  const byte keys[][MFRC522::MF_KEY_SIZE] = {
+    {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+    {0xD3, 0xF7, 0xD3, 0xF7, 0xD3, 0xF7},
+  };
+  MFRC522::MIFARE_Key key;
+  for (byte candidate = 0; candidate < 2; candidate++) {
+    for (byte index = 0; index < MFRC522::MF_KEY_SIZE; index++) key.keyByte[index] = keys[candidate][index];
+    if (rfid.PCD_Authenticate(MFRC522::PICC_CMD_MF_AUTH_KEY_A, trailerBlock, &key, &(rfid.uid))
+        == MFRC522::STATUS_OK) return true;
+  }
+  return false;
+}
+
+bool readClassicNdefText(MFRC522 &rfid, String &text) {
+  const uint16_t maxBytes = 256;
+  byte data[maxBytes];
+  uint16_t count = 0;
+
+  for (byte sector = 1; sector < 16 && count < maxBytes; sector++) {
+    const byte trailerBlock = sector * 4 + 3;
+    if (!authenticateClassicSector(rfid, trailerBlock)) {
+      continue;
+    }
+    for (byte offset = 0; offset < 3 && count < maxBytes; offset++) {
+      byte buffer[18];
+      byte size = sizeof(buffer);
+      if (rfid.MIFARE_Read(sector * 4 + offset, buffer, &size) != MFRC522::STATUS_OK) continue;
+      for (byte index = 0; index < 16 && count < maxBytes; index++) data[count++] = buffer[index];
+    }
+  }
+  return parseNdefText(data, count, text);
+}
+
+bool readNdefText(MFRC522 &rfid, MFRC522::PICC_Type type, String &text) {
+  if (type == MFRC522::PICC_TYPE_MIFARE_1K || type == MFRC522::PICC_TYPE_MIFARE_4K) {
+    return readClassicNdefText(rfid, text);
+  }
+  return readType2NdefText(rfid, text);
 }
 
 void setup() {
@@ -152,16 +200,11 @@ void scanReader(MFRC522 &rfid, byte readerId, String &lastUid, unsigned long &la
     Serial.print(F("[RC522] Tipo: "));
     Serial.println(rfid.PICC_GetTypeName(type));
 
-    String ndef;
-    if (readNdefText(rfid, ndef)) {
-      // Línea estable para serial_nfc_bridge.py: conserva el contenido físico.
-      Serial.print(F("READER="));
-      Serial.print(readerId);
-      Serial.print(F(";NDEF="));
-      Serial.println(ndef);
-    } else {
-      Serial.println(F("[RC522] No se encontró un NDEF de texto compatible."));
-    }
+    // La ruta de MIFARE Classic actual usa el UID como clave de un mapa local.
+    Serial.print(F("READER="));
+    Serial.print(readerId);
+    Serial.print(F(";UID="));
+    Serial.println(uid);
 
     lastUid = uid;
     lastReadAt = now;
