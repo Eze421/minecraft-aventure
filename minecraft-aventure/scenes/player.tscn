@@ -1008,6 +1008,7 @@ _data = {
 
 [node name="Player" type="CharacterBody3D" unique_id=1438490901 groups=["player"]]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+collision_priority = 1.575
 script = ExtResource("1_3vyb7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2043166775]
@@ -1083,6 +1084,9 @@ mesh = SubResource("ArrayMesh_gnysi")
 libraries/ = SubResource("AnimationLibrary_b66i6")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2125330118]
+transform = Transform3D(0.5, 0, 0, 0, 0.490503, 0.09698872, 0, -0.09698872, 0.490503, 0, 2.2282138, 3.0770583)
 fov = 55.0
 script = ExtResource("3_cinematic_camera")
-follow_offset = Vector3(0, 6, 8)
+follow_offset = Vector3(5, 5, 7)
+minimum_pitch_degrees = 10.0
+maximum_pitch_degrees = 60.0

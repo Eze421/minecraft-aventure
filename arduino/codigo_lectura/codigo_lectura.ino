@@ -23,7 +23,7 @@
 
 constexpr byte MAX_READER_COUNT = 9;
 // Actualmente hay dos lectores cableados. Cambiar a 3..9 al conectar cada uno.
-constexpr byte ACTIVE_READER_COUNT = 2;
+constexpr byte ACTIVE_READER_COUNT = 3;
 constexpr unsigned long REPEAT_DELAY_MS = 1200;
 
 struct ReaderConfig {

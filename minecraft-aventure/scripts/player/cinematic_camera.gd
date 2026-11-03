@@ -1,7 +1,11 @@
 class_name CinematicCamera
 extends Camera3D
 
-## Cámara de tercera persona con encuadres cinemáticos reutilizables.
+## Cámara de tercera persona con encuadres cinemáticos reutilizables y control por código.
+
+signal shot_started(shot: CinematicShot)
+signal returned_to_follow
+
 @export_group("Seguimiento")
 @export_node_path("Node3D") var follow_target_path: NodePath = NodePath("..")
 @export var follow_offset := Vector3(5.0, 4.5, 7.0)
@@ -11,12 +15,8 @@ extends Camera3D
 @export var mouse_orbit_enabled := true
 @export var capture_mouse_on_ready := false
 @export_range(0.001, 0.02, 0.001) var mouse_sensitivity := 0.005
-@export_range(-80.0, 0.0, 1.0) var minimum_pitch_degrees := -35.0
+@export_range(-80.0, 10.0, 1.0) var minimum_pitch_degrees := -35.0
 @export_range(0.0, 80.0, 1.0) var maximum_pitch_degrees := 45.0
-@export_group("Prueba en editor")
-@export var debug_shortcuts_enabled := true
-@export var debug_shots: Array[NodePath] = []
-
 var _follow_target: Node3D
 var _current_shot: CinematicShot
 var _is_following := true
@@ -29,6 +29,7 @@ var _target_fov := 55.0
 
 
 func _ready() -> void:
+	add_to_group("cinematic_camera")
 	top_level = true
 	current = true
 	_follow_fov = fov
@@ -69,9 +70,6 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		_handle_key_input(event)
-		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		if mouse_orbit_enabled and _is_following:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -85,26 +83,6 @@ func _input(event: InputEvent) -> void:
 				deg_to_rad(maximum_pitch_degrees)
 			)
 
-
-func _handle_key_input(event: InputEventKey) -> void:
-	if not event.is_pressed() or event.is_echo():
-		return
-	if event.keycode == KEY_ESCAPE:
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		return
-	if not debug_shortcuts_enabled:
-		return
-	if event.keycode == KEY_1:
-		return_to_follow()
-		return
-	var shot_index: int = int(event.keycode) - int(KEY_2)
-	var available_shots := _get_available_shots()
-	if shot_index >= 0 and shot_index < available_shots.size():
-		var shot: CinematicShot = available_shots[shot_index]
-		if shot != null:
-			play_shot(shot)
-
-
 ## Cambia suavemente al encuadre. Puede llamarse desde cualquier script.
 func play_shot(shot: CinematicShot, transition_override := -1.0) -> void:
 	if shot == null:
@@ -112,12 +90,26 @@ func play_shot(shot: CinematicShot, transition_override := -1.0) -> void:
 	_current_shot = shot
 	_is_following = false
 	_current_transition_duration = shot.get_transition_duration() if transition_override < 0.0 else transition_override
+	shot_started.emit(shot)
 
 
-## Vuelve al seguimiento de tercera persona.
+## Vuelve al seguimiento de tercera persona del jugador.
 func return_to_follow() -> void:
+	var was_in_shot := not _is_following
 	_is_following = true
 	_current_shot = null
+	if was_in_shot:
+		returned_to_follow.emit()
+
+
+## Retorna verdadero si la cámara está en seguimiento normal de tercera persona.
+func is_following() -> bool:
+	return _is_following
+
+
+## Retorna el encuadre actual o null si está en modo seguimiento.
+func get_current_shot() -> CinematicShot:
+	return _current_shot
 
 
 func _snap_to_follow() -> void:
@@ -141,19 +133,3 @@ func _get_orbit_offset() -> Vector3:
 		sin(_orbit_pitch) * _follow_distance,
 		cos(_orbit_yaw) * horizontal_distance
 	)
-
-
-func _get_available_shots() -> Array[CinematicShot]:
-	var shots: Array[CinematicShot] = []
-	for shot_path in debug_shots:
-		var configured_shot := get_node_or_null(shot_path) as CinematicShot
-		if configured_shot != null:
-			shots.append(configured_shot)
-	if not shots.is_empty():
-		return shots
-
-	for node in get_tree().get_nodes_in_group("cinematic_shots"):
-		var discovered_shot := node as CinematicShot
-		if discovered_shot != null:
-			shots.append(discovered_shot)
-	return shots

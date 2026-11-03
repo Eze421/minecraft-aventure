@@ -24,6 +24,10 @@ NfcHttp="*res://scripts/nfc/nfc_http_service.gd"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [global_group]
 
 player=""
