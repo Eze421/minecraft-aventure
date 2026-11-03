@@ -3,6 +3,9 @@
 [ext_resource type="MeshLibrary" uid="uid://xiw2x85j8jw1" path="res://tiles/blocks.tres" id="1_errlg"]
 [ext_resource type="PackedScene" path="res://scenes/components/nfc_requirement.tscn" id="2_bl13t"]
 [ext_resource type="PackedScene" uid="uid://uwrk88eiabxc" path="res://scenes/player.tscn" id="3_iyx0m"]
+[ext_resource type="Script" uid="uid://dlqameng1tyvs" path="res://scripts/player/cinematic_shot.gd" id="4_cinematic_shot"]
+[ext_resource type="Resource" uid="uid://bki5jxef8fria" path="res://scenes/components/cinematic_shot_close_up.tres" id="5_lpvoh"]
+[ext_resource type="Resource" path="res://scenes/components/cinematic_shot_wide.tres" id="5_wide"]
 
 [sub_resource type="GDScript" id="GDScript_jjgoa"]
 script/source = "extends Area3D
@@ -43,6 +46,7 @@ func _on_body_exited(body: Node3D) -> void:
 func _on_nfc_requirement_completed(item: Dictionary, reader_id: int) -> void:
 	var i = requirement.required_item_id
 	text = requirement._item_name_from_catalog(i)
+	print(text)
 "
 
 [sub_resource type="BoxMesh" id="BoxMesh_jjgoa"]
@@ -81,12 +85,26 @@ mesh = SubResource("BoxMesh_jjgoa")
 shape = SubResource("BoxShape3D_nua58")
 
 [node name="NfcRequirement" parent="Area3D" unique_id=261261752 instance=ExtResource("2_bl13t")]
-"Requisito NFC/Ítem requerido" = "CARD_001"
-"Requisito NFC/Nombre del ítem" = "Madera"
-"Requisito NFC/Lector requerido" = 0
+"Requisito NFC/Ítem requerido" = "CARD_002"
+"Requisito NFC/Nombre del ítem" = "Piedra"
+"Requisito NFC/Lector requerido" = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2913686]
 environment = SubResource("Environment_nua58")
+
+[node name="CinematicShots" type="Node3D" parent="." unique_id=1613119760]
+
+[node name="Overview" type="Marker3D" parent="CinematicShots" unique_id=785230118]
+transform = Transform3D(0.819152, -0.196175, 0.538986, 0, 0.939693, 0.34202, -0.573576, -0.280166, 0.769751, 9, 8, 9)
+script = ExtResource("4_cinematic_shot")
+look_target_path = NodePath("../../Player")
+template = ExtResource("5_wide")
+
+[node name="NfcCloseup" type="Marker3D" parent="CinematicShots" unique_id=260539677]
+transform = Transform3D(-0.857493, 0.166508, -0.486935, 0, 0.946191, 0.32361, 0.514496, 0.277649, -0.811356, 7, 5, -1)
+script = ExtResource("4_cinematic_shot")
+look_target_path = NodePath("../../Area3D")
+template = ExtResource("5_lpvoh")
 
 [node name="Player" parent="." unique_id=1438490901 instance=ExtResource("3_iyx0m")]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 2.756836, 0)

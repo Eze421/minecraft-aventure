@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CinematicShotTemplate" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/cinematic_shot_template.gd" id="1_template"]
+
+[resource]
+script = ExtResource("1_template")
+display_name = "Plano abierto"
+transition_duration = 1.0
+fov = 62.0
+look_at_offset = Vector3(0, 1.2, 0)

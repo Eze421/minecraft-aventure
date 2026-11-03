@@ -16,10 +16,21 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var input_dir := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	# El movimiento se alinea con la cámara isométrica actual, no con el mundo.
+	var input_dir: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var wasd_dir := Vector2(
+		float(Input.is_key_pressed(KEY_D)) - float(Input.is_key_pressed(KEY_A)),
+		float(Input.is_key_pressed(KEY_S)) - float(Input.is_key_pressed(KEY_W))
+	)
+	input_dir = (input_dir + wasd_dir).limit_length()
+	var direction := Vector3.ZERO
+	var camera := get_viewport().get_camera_3d()
+	if camera != null:
+		var camera_right := camera.global_transform.basis.x
+		var camera_forward := -camera.global_transform.basis.z
+		camera_right.y = 0.0
+		camera_forward.y = 0.0
+		direction = (camera_right.normalized() * input_dir.x - camera_forward.normalized() * input_dir.y).normalized()
 	if direction:
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Minecraft aventure"
-run/main_scene="res://scenes/nfc_requirement_test.tscn"
+run/main_scene="uid://c74qhcdsouhlh"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c8uejm8ygoire" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Texture2D" uid="uid://bgdytl3qj1y85" path="res://assets/steve/steve_steve_0.png" id="2_g2els"]
+[ext_resource type="Script" uid="uid://dppgcxkb86rrh" path="res://scripts/player/cinematic_camera.gd" id="3_cinematic_camera"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qhqgy"]
 size = Vector3(1.2, 2, 0.7)
@@ -1082,4 +1083,6 @@ mesh = SubResource("ArrayMesh_gnysi")
 libraries/ = SubResource("AnimationLibrary_b66i6")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2125330118]
-transform = Transform3D(0.5, 0, 0, 0, 0.4803298, 0.13886425, 0, -0.13886425, 0.4803298, 0, 1.9130554, 1.9240112)
+fov = 55.0
+script = ExtResource("3_cinematic_camera")
+follow_offset = Vector3(0, 6, 8)

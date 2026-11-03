@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="CinematicShotTemplate" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/cinematic_shot_template.gd" id="1_template"]
+
+[resource]
+script = ExtResource("1_template")
+display_name = "Foco de objeto"
+transition_duration = 0.65
+fov = 48.0
+look_at_offset = Vector3(0, 1.0, 0)

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CinematicShotTemplate" format=3 uid="uid://bki5jxef8fria"]
+
+[ext_resource type="Script" uid="uid://c6p4qhvsimofi" path="res://scripts/player/cinematic_shot_template.gd" id="1_template"]
+
+[resource]
+script = ExtResource("1_template")
+display_name = "Primer plano"
+transition_duration = 0.5
+fov = 42.0
